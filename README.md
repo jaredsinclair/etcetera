@@ -15,3 +15,7 @@ git submodule add git@github.com:/jaredsinclair/etcetera.git
 ```
 
 Then add only those source files that you wish to use to whatever targets are most applicable.
+
+## Acknowledgements
+
+- The `Activity` approach to the `os_activity` wrapper is based on work by [Zach Waldowki](https://gist.github.com/zwaldowski/49f61292757f86d7d036a529f2d04f0c).
