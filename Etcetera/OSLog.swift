@@ -372,9 +372,9 @@ extension CustomLogRepresentable {
     public func logRepresentation(privacy: OSLog.Privacy) -> LogMessage {
         switch privacy {
         case .visible:
-            return LogMessage("@{public}@", logDescription)
+            return LogMessage("%{public}@", logDescription)
         case .redacted:
-            return LogMessage("@{private}@", logDescription)
+            return LogMessage("%{private}@", logDescription)
         }
     }
 
