@@ -137,7 +137,10 @@ public extension OSLog {
     /// - parameter args: A list of arguments to the format string (if any).
     @_inlineable
     public func log(format: StaticString, args: CVarArg...) {
-        _etcetera_log(representation: LogMessage(format: format, array: args), type: .default)
+        // Use the `(format:array:)` variant to prevent the compiler from
+        // wrapping a single argument in an array it thinks you implied.
+        let representation = LogMessage(format: format, array: args)
+        _etcetera_log(representation: representation, type: .default)
     }
 
     /// Logs a message using the `.default` type.
@@ -161,7 +164,10 @@ public extension OSLog {
     /// - parameter args: A list of arguments to the format string (if any).
     @_inlineable
     public func info(format: StaticString, args: CVarArg...) {
-        _etcetera_log(representation: LogMessage(format, args), type: .info)
+        // Use the `(format:array:)` variant to prevent the compiler from
+        // wrapping a single argument in an array it thinks you implied.
+        let representation = LogMessage(format: format, array: args)
+        _etcetera_log(representation: representation, type: .info)
     }
 
     /// Logs a message using the `.info` type.
@@ -192,7 +198,10 @@ public extension OSLog {
     /// - parameter args: A list of arguments to the format string (if any).
     @_inlineable
     public func debug(format: StaticString, args: CVarArg...) {
-        _etcetera_log(representation: LogMessage(format, args), type: .debug)
+        // Use the `(format:array:)` variant to prevent the compiler from
+        // wrapping a single argument in an array it thinks you implied.
+        let representation = LogMessage(format: format, array: args)
+        _etcetera_log(representation: representation, type: .debug)
     }
 
     /// Logs a message using the `.debug` type.
@@ -216,7 +225,10 @@ public extension OSLog {
     /// - parameter args: A list of arguments to the format string (if any).
     @_inlineable
     public func error(format: StaticString, args: CVarArg...) {
-        _etcetera_log(representation: LogMessage(format, args), type: .error)
+        // Use the `(format:array:)` variant to prevent the compiler from
+        // wrapping a single argument in an array it thinks you implied.
+        let representation = LogMessage(format: format, array: args)
+        _etcetera_log(representation: representation, type: .error)
     }
 
     /// Logs a message using the `.error` type.
@@ -240,7 +252,10 @@ public extension OSLog {
     /// - parameter args: A list of arguments to the format string (if any).
     @_inlineable
     public func fault(format: StaticString, args: CVarArg...) {
-        _etcetera_log(representation: LogMessage(format, args), type: .fault)
+        // Use the `(format:array:)` variant to prevent the compiler from
+        // wrapping a single argument in an array it thinks you implied.
+        let representation = LogMessage(format: format, array: args)
+        _etcetera_log(representation: representation, type: .fault)
     }
 
     /// Logs a message using the `.fault` type.
@@ -370,8 +385,8 @@ public struct LogMessage {
     ///
     /// Use this initializer if you are forwarding a `CVarArg...` list from
     /// a calling Swift function and need to prevent the compiler from treating
-    /// a single value as an array containing that single value, e.g. from
-    /// infering `Array<Int>` from a single `Int` argument.
+    /// a single value as an implied array containing that single value, e.g.
+    /// from an infering `Array<Int>` from a single `Int` argument.
     public init(format: StaticString, array args: [CVarArg]) {
         assert(args.count < 10, "The Swift overlay of os_log prevents this OSLog extension from accepting an unbounded number of args.")
         self.format = format
