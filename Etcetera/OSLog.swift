@@ -137,7 +137,7 @@ public extension OSLog {
     /// - parameter args: A list of arguments to the format string (if any).
     @_inlineable
     public func log(format: StaticString, args: CVarArg...) {
-        _etcetera_log(representation: LogMessage(format, args), type: .default)
+        _etcetera_log(representation: LogMessage(format: format, array: args), type: .default)
     }
 
     /// Logs a message using the `.default` type.
@@ -359,7 +359,20 @@ public struct LogMessage {
     /// initialize with more than nine arguments will trip an assertion.
     public let args: [CVarArg]
 
+    /// Primary Initializer
     public init(_ format: StaticString, _ args: CVarArg...) {
+        assert(args.count < 10, "The Swift overlay of os_log prevents this OSLog extension from accepting an unbounded number of args.")
+        self.format = format
+        self.args = args
+    }
+
+    /// Convenience initializer.
+    ///
+    /// Use this initializer if you are forwarding a `CVarArg...` list from
+    /// a calling Swift function and need to prevent the compiler from treating
+    /// a single value as an array containing that single value, e.g. from
+    /// infering `Array<Int>` from a single `Int` argument.
+    public init(format: StaticString, array args: [CVarArg]) {
         assert(args.count < 10, "The Swift overlay of os_log prevents this OSLog extension from accepting an unbounded number of args.")
         self.format = format
         self.args = args
