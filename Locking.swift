@@ -5,6 +5,8 @@
 //  Created by Jared Sinclair on 7/21/18.
 //
 
+import Darwin
+
 /// A high-performance lock supported by all Apple platforms.
 public final class Lock {
     private var lock = os_unfair_lock()
