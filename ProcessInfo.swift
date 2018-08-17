@@ -7,9 +7,6 @@
 
 import Foundation
 
-/// If you're into the whole brevity thing.
-public typealias LaunchArg = ProcessInfo.Argument
-
 /// Quality-of-life extension of ProcessInfo.
 extension ProcessInfo {
 
@@ -22,9 +19,9 @@ extension ProcessInfo {
     ///     }
     ///
     /// If you want to prefix your launch arguments, then as early as possible
-    /// during app launch, provide a value for the standard prefix:
+    /// during app launch, provide a value for the common prefix:
     ///
-    ///     LaunchArg.commonPrefix = "-com.domain.MyApp"
+    ///     ProcessInfo.Argument.commonPrefix = "-com.domain.MyApp"
     ///
     /// Next, edit your target's Xcode scheme to add the following for each of
     /// your custom launch arguments:
@@ -37,7 +34,7 @@ extension ProcessInfo {
     ///
     /// or:
     ///
-    ///     if LaunchArg.resetCachesOnLaunch.isEnabled { ... }
+    ///     if ProcessInfo.Argument.resetCachesOnLaunch.isEnabled { ... }
     public struct Argument: RawRepresentable, ExpressibleByStringLiteral {
 
         /// Supply your own "-com.domain.MyApp." prefix which must be present in
