@@ -10,19 +10,19 @@
 		7F0973B4208139920093571D /* Etcetera.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0973AA208139920093571D /* Etcetera.framework */; };
 		7F0973B9208139920093571D /* EtceteraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0973B8208139920093571D /* EtceteraTests.swift */; };
 		7F0973BB208139920093571D /* Etcetera.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F0973AD208139920093571D /* Etcetera.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7FA510FD210500C400341E55 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F0210500C400341E55 /* ImageCache.swift */; };
-		7FA510FE210500C400341E55 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F1210500C400341E55 /* UIApplication.swift */; };
-		7FA510FF210500C400341E55 /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F2210500C400341E55 /* NotificationObserver.swift */; };
-		7FA51101210500C400341E55 /* Collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F4210500C400341E55 /* Collections.swift */; };
-		7FA51102210500C400341E55 /* os_activity_shims.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA510F5210500C400341E55 /* os_activity_shims.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7FA51103210500C400341E55 /* Locking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F6210500C400341E55 /* Locking.swift */; };
-		7FA51104210500C400341E55 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F7210500C400341E55 /* ProcessInfo.swift */; };
-		7FA51105210500C400341E55 /* OSActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F8210500C400341E55 /* OSActivity.swift */; };
-		7FA51106210500C400341E55 /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510F9210500C400341E55 /* NotificationCenter.swift */; };
-		7FA51107210500C400341E55 /* OperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510FA210500C400341E55 /* OperationQueue.swift */; };
-		7FA51108210500C400341E55 /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510FB210500C400341E55 /* OSLog.swift */; };
-		7FA51109210500C400341E55 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA510FC210500C400341E55 /* Reachability.swift */; };
-		7FE3ECFA2121D0D5003C7E40 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE3ECF92121D0D5003C7E40 /* BackgroundTask.swift */; };
+		7F72B72221270CEB007EE06D /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71521270CEB007EE06D /* NotificationObserver.swift */; };
+		7F72B72321270CEB007EE06D /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71621270CEB007EE06D /* UIApplication.swift */; };
+		7F72B72421270CEB007EE06D /* OperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71721270CEB007EE06D /* OperationQueue.swift */; };
+		7F72B72521270CEB007EE06D /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71821270CEB007EE06D /* NotificationCenter.swift */; };
+		7F72B72621270CEB007EE06D /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71921270CEB007EE06D /* BackgroundTask.swift */; };
+		7F72B72721270CEB007EE06D /* os_activity_shims.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F72B71A21270CEB007EE06D /* os_activity_shims.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F72B72821270CEB007EE06D /* Locking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71B21270CEB007EE06D /* Locking.swift */; };
+		7F72B72921270CEB007EE06D /* Collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71C21270CEB007EE06D /* Collections.swift */; };
+		7F72B72A21270CEB007EE06D /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71D21270CEB007EE06D /* ImageCache.swift */; };
+		7F72B72B21270CEB007EE06D /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71E21270CEB007EE06D /* Reachability.swift */; };
+		7F72B72C21270CEB007EE06D /* OSActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B71F21270CEB007EE06D /* OSActivity.swift */; };
+		7F72B72D21270CEB007EE06D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B72021270CEB007EE06D /* OSLog.swift */; };
+		7F72B72E21270CEB007EE06D /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72B72121270CEB007EE06D /* ProcessInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,19 +42,19 @@
 		7F0973B3208139920093571D /* EtceteraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EtceteraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0973B8208139920093571D /* EtceteraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EtceteraTests.swift; sourceTree = "<group>"; };
 		7F0973BA208139920093571D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7FA510F0210500C400341E55 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = ../Etcetera/ImageCache.swift; sourceTree = "<group>"; };
-		7FA510F1210500C400341E55 /* UIApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIApplication.swift; path = ../Etcetera/UIApplication.swift; sourceTree = "<group>"; };
-		7FA510F2210500C400341E55 /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationObserver.swift; path = ../Etcetera/NotificationObserver.swift; sourceTree = "<group>"; };
-		7FA510F4210500C400341E55 /* Collections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Collections.swift; path = ../Etcetera/Collections.swift; sourceTree = "<group>"; };
-		7FA510F5210500C400341E55 /* os_activity_shims.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = os_activity_shims.h; path = ../Etcetera/os_activity_shims.h; sourceTree = "<group>"; };
-		7FA510F6210500C400341E55 /* Locking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Locking.swift; path = ../Etcetera/Locking.swift; sourceTree = "<group>"; };
-		7FA510F7210500C400341E55 /* ProcessInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProcessInfo.swift; path = ../Etcetera/ProcessInfo.swift; sourceTree = "<group>"; };
-		7FA510F8210500C400341E55 /* OSActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OSActivity.swift; path = ../Etcetera/OSActivity.swift; sourceTree = "<group>"; };
-		7FA510F9210500C400341E55 /* NotificationCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationCenter.swift; path = ../Etcetera/NotificationCenter.swift; sourceTree = "<group>"; };
-		7FA510FA210500C400341E55 /* OperationQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OperationQueue.swift; path = ../Etcetera/OperationQueue.swift; sourceTree = "<group>"; };
-		7FA510FB210500C400341E55 /* OSLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OSLog.swift; path = ../Etcetera/OSLog.swift; sourceTree = "<group>"; };
-		7FA510FC210500C400341E55 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = ../Etcetera/Reachability.swift; sourceTree = "<group>"; };
-		7FE3ECF92121D0D5003C7E40 /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundTask.swift; path = ../Etcetera/BackgroundTask.swift; sourceTree = "<group>"; };
+		7F72B71521270CEB007EE06D /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationObserver.swift; path = ../../NotificationObserver.swift; sourceTree = "<group>"; };
+		7F72B71621270CEB007EE06D /* UIApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIApplication.swift; path = ../../UIApplication.swift; sourceTree = "<group>"; };
+		7F72B71721270CEB007EE06D /* OperationQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OperationQueue.swift; path = ../../OperationQueue.swift; sourceTree = "<group>"; };
+		7F72B71821270CEB007EE06D /* NotificationCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationCenter.swift; path = ../../NotificationCenter.swift; sourceTree = "<group>"; };
+		7F72B71921270CEB007EE06D /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundTask.swift; path = ../../BackgroundTask.swift; sourceTree = "<group>"; };
+		7F72B71A21270CEB007EE06D /* os_activity_shims.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = os_activity_shims.h; path = ../../os_activity_shims.h; sourceTree = "<group>"; };
+		7F72B71B21270CEB007EE06D /* Locking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Locking.swift; path = ../../Locking.swift; sourceTree = "<group>"; };
+		7F72B71C21270CEB007EE06D /* Collections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Collections.swift; path = ../../Collections.swift; sourceTree = "<group>"; };
+		7F72B71D21270CEB007EE06D /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = ../../ImageCache.swift; sourceTree = "<group>"; };
+		7F72B71E21270CEB007EE06D /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = ../../Reachability.swift; sourceTree = "<group>"; };
+		7F72B71F21270CEB007EE06D /* OSActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OSActivity.swift; path = ../../OSActivity.swift; sourceTree = "<group>"; };
+		7F72B72021270CEB007EE06D /* OSLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OSLog.swift; path = ../../OSLog.swift; sourceTree = "<group>"; };
+		7F72B72121270CEB007EE06D /* ProcessInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProcessInfo.swift; path = ../../ProcessInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,19 +79,6 @@
 		7F0973A0208139920093571D = {
 			isa = PBXGroup;
 			children = (
-				7FE3ECF92121D0D5003C7E40 /* BackgroundTask.swift */,
-				7FA510F4210500C400341E55 /* Collections.swift */,
-				7FA510F0210500C400341E55 /* ImageCache.swift */,
-				7FA510F6210500C400341E55 /* Locking.swift */,
-				7FA510F9210500C400341E55 /* NotificationCenter.swift */,
-				7FA510F2210500C400341E55 /* NotificationObserver.swift */,
-				7FA510FA210500C400341E55 /* OperationQueue.swift */,
-				7FA510F5210500C400341E55 /* os_activity_shims.h */,
-				7FA510F8210500C400341E55 /* OSActivity.swift */,
-				7FA510FB210500C400341E55 /* OSLog.swift */,
-				7FA510F7210500C400341E55 /* ProcessInfo.swift */,
-				7FA510FC210500C400341E55 /* Reachability.swift */,
-				7FA510F1210500C400341E55 /* UIApplication.swift */,
 				7F0973AC208139920093571D /* Etcetera */,
 				7F0973B7208139920093571D /* EtceteraTests */,
 				7F0973AB208139920093571D /* Products */,
@@ -111,6 +98,19 @@
 			isa = PBXGroup;
 			children = (
 				7F0973AD208139920093571D /* Etcetera.h */,
+				7F72B71921270CEB007EE06D /* BackgroundTask.swift */,
+				7F72B71C21270CEB007EE06D /* Collections.swift */,
+				7F72B71D21270CEB007EE06D /* ImageCache.swift */,
+				7F72B71B21270CEB007EE06D /* Locking.swift */,
+				7F72B71821270CEB007EE06D /* NotificationCenter.swift */,
+				7F72B71521270CEB007EE06D /* NotificationObserver.swift */,
+				7F72B71721270CEB007EE06D /* OperationQueue.swift */,
+				7F72B71A21270CEB007EE06D /* os_activity_shims.h */,
+				7F72B71F21270CEB007EE06D /* OSActivity.swift */,
+				7F72B72021270CEB007EE06D /* OSLog.swift */,
+				7F72B72121270CEB007EE06D /* ProcessInfo.swift */,
+				7F72B71E21270CEB007EE06D /* Reachability.swift */,
+				7F72B71621270CEB007EE06D /* UIApplication.swift */,
 				7F0973AE208139920093571D /* Info.plist */,
 			);
 			path = Etcetera;
@@ -132,7 +132,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7FA51102210500C400341E55 /* os_activity_shims.h in Headers */,
+				7F72B72721270CEB007EE06D /* os_activity_shims.h in Headers */,
 				7F0973BB208139920093571D /* Etcetera.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,18 +235,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7FA510FE210500C400341E55 /* UIApplication.swift in Sources */,
-				7FA510FD210500C400341E55 /* ImageCache.swift in Sources */,
-				7FA51109210500C400341E55 /* Reachability.swift in Sources */,
-				7FA51105210500C400341E55 /* OSActivity.swift in Sources */,
-				7FA51108210500C400341E55 /* OSLog.swift in Sources */,
-				7FA51104210500C400341E55 /* ProcessInfo.swift in Sources */,
-				7FE3ECFA2121D0D5003C7E40 /* BackgroundTask.swift in Sources */,
-				7FA510FF210500C400341E55 /* NotificationObserver.swift in Sources */,
-				7FA51101210500C400341E55 /* Collections.swift in Sources */,
-				7FA51106210500C400341E55 /* NotificationCenter.swift in Sources */,
-				7FA51103210500C400341E55 /* Locking.swift in Sources */,
-				7FA51107210500C400341E55 /* OperationQueue.swift in Sources */,
+				7F72B72321270CEB007EE06D /* UIApplication.swift in Sources */,
+				7F72B72421270CEB007EE06D /* OperationQueue.swift in Sources */,
+				7F72B72A21270CEB007EE06D /* ImageCache.swift in Sources */,
+				7F72B72221270CEB007EE06D /* NotificationObserver.swift in Sources */,
+				7F72B72D21270CEB007EE06D /* OSLog.swift in Sources */,
+				7F72B72C21270CEB007EE06D /* OSActivity.swift in Sources */,
+				7F72B72621270CEB007EE06D /* BackgroundTask.swift in Sources */,
+				7F72B72E21270CEB007EE06D /* ProcessInfo.swift in Sources */,
+				7F72B72B21270CEB007EE06D /* Reachability.swift in Sources */,
+				7F72B72521270CEB007EE06D /* NotificationCenter.swift in Sources */,
+				7F72B72921270CEB007EE06D /* Collections.swift in Sources */,
+				7F72B72821270CEB007EE06D /* Locking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
