@@ -378,7 +378,7 @@ public class ImageCache {
     private func registerObservers() {
         #if os(iOS)
             observers.append(NotificationCenter.default.addObserver(
-                forName: .UIApplicationDidEnterBackground,
+                forName: UIApplication.didEnterBackgroundNotification,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
@@ -860,14 +860,14 @@ private class MemoryCache<Key: Hashable, Value> {
     init() {
         #if os(iOS)
             observers.append(NotificationCenter.default.addObserver(
-                forName: .UIApplicationDidReceiveMemoryWarning,
+                forName: UIApplication.didReceiveMemoryWarningNotification,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
                     self?.removeAll()
             }))
             observers.append(NotificationCenter.default.addObserver(
-                forName: .UIApplicationDidEnterBackground,
+                forName: UIApplication.didEnterBackgroundNotification,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
@@ -1012,7 +1012,7 @@ private struct Request<Result> {
 #if os(iOS)
 private class _BackgroundTask {
 
-    private var taskId: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var taskId: UIBackgroundTaskIdentifier = .invalid
     
     static func start() -> _BackgroundTask? {
         let task = _BackgroundTask()
@@ -1025,13 +1025,13 @@ private class _BackgroundTask {
             if let safeHandler = handler { safeHandler() }
             self.end()
         }
-        return (self.taskId != UIBackgroundTaskInvalid)
+        return (self.taskId != .invalid)
     }
     
     func end() {
-        guard self.taskId != UIBackgroundTaskInvalid else { return }
+        guard self.taskId != .invalid else { return }
         let taskId = self.taskId
-        self.taskId = UIBackgroundTaskInvalid
+        self.taskId = .invalid
         UIApplication.shared.endBackgroundTask(taskId)
     }
 
@@ -1095,7 +1095,7 @@ extension FileManager {
     
     fileprivate func save(_ image: Image, to url: URL) {
         #if os(iOS)
-            guard let data = UIImagePNGRepresentation(image) else { return }
+            guard let data = image.pngData() else { return }
         #elseif os(OSX)
             guard let data = image.tiffRepresentation else { return }
         #endif
