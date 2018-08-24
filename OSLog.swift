@@ -267,15 +267,17 @@ public extension OSLog {
         _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .fault)
     }
 
-    // MARK: - Effectively Private, But Public So That @inlinable Declarations Work
+    // MARK: - Internal
 
-    public func _etcetera_log(value: Any, privacy: Privacy, includeSourceLocation: Bool, file: String, function: String, line: Int, type: OSLogType) {
+    @usableFromInline
+    internal func _etcetera_log(value: Any, privacy: Privacy, includeSourceLocation: Bool, file: String, function: String, line: Int, type: OSLogType) {
         let loggable = (value as? CustomLogRepresentable) ?? AnyLoggable(value)
         let representation = loggable.logRepresentation(includeSourceLocation: includeSourceLocation, privacy: privacy, file: file, function: function, line: line)
         _etcetera_log(representation: representation, type: type)
     }
 
-    public func _etcetera_log(representation: LogMessage, type: OSLogType) {
+    @usableFromInline
+    internal func _etcetera_log(representation: LogMessage, type: OSLogType) {
         // http://www.openradar.me/33203955
         // Sigh...
         // or should I say
@@ -397,6 +399,7 @@ public struct LogMessage {
 
 extension CustomLogRepresentable {
 
+    @inlinable
     public func logRepresentation(privacy: OSLog.Privacy) -> LogMessage {
         switch privacy {
         case .visible:
@@ -406,6 +409,7 @@ extension CustomLogRepresentable {
         }
     }
 
+    @inlinable
     public func logRepresentation(privacy: OSLog.Privacy, file: String, function: String, line: Int) -> LogMessage {
         switch privacy {
         case .visible:
@@ -415,7 +419,8 @@ extension CustomLogRepresentable {
         }
     }
 
-    fileprivate func logRepresentation(includeSourceLocation: Bool, privacy: OSLog.Privacy, file: String, function: String, line: Int) -> LogMessage {
+    @usableFromInline
+    func logRepresentation(includeSourceLocation: Bool, privacy: OSLog.Privacy, file: String, function: String, line: Int) -> LogMessage {
         if includeSourceLocation {
             let filename = file.split(separator: "/").last.flatMap{String($0)} ?? file
             return logRepresentation(privacy: privacy, file: filename, function: function, line: line)
@@ -424,7 +429,8 @@ extension CustomLogRepresentable {
         }
     }
 
-    private var logDescription: String {
+    @usableFromInline
+    var logDescription: String {
         let value: Any = (self as? AnyLoggable)?.loggableValue ?? self
         if let string = value as? String {
             return string
