@@ -553,16 +553,29 @@ extension ImageCache {
         /// using the other formats.
         case custom(editKey: String, block: (ImageCache.Image) -> ImageCache.Image)
 
-        public var hashValue: Int {
+        public func hash(into hasher: inout Hasher) {
             switch self {
             case .original:
-                return ".original".hashValue
+                hasher.combine(".original")
             case let .scaled(size, mode, bleed, opaque, cornerRadius, border, contentScale):
-                return ".scaled".hashValue ^ size.width.hashValue ^ size.height.hashValue ^ mode.hashValue ^ bleed.hashValue ^ opaque.hashValue ^ cornerRadius.hashValue ^ (border?.hashValue ?? 0) ^ contentScale.hashValue
+                hasher.combine(".scaled")
+                hasher.combine(size.width)
+                hasher.combine(size.height)
+                hasher.combine(mode)
+                hasher.combine(bleed)
+                hasher.combine(opaque)
+                hasher.combine(cornerRadius)
+                hasher.combine(border)
+                hasher.combine(contentScale)
             case let .round(size, border, contentScale):
-                return ".round".hashValue ^ size.width.hashValue ^ size.height.hashValue ^ (border?.hashValue ?? 0) ^ contentScale.hashValue
+                hasher.combine(".round")
+                hasher.combine(size.width)
+                hasher.combine(size.height)
+                hasher.combine(border)
+                hasher.combine(contentScale)
             case .custom(let key, _):
-                return ".custom".hashValue ^ key.hashValue
+                hasher.combine(".original")
+                hasher.combine(key)
             }
         }
 
@@ -627,9 +640,11 @@ extension ImageCache.Format {
 
         case hairline(ImageCache.Color)
 
-        public var hashValue: Int {
+        public func hash(into hasher: inout Hasher) {
             switch self {
-            case .hairline(let color): return ".hairline".hashValue ^ color.hashValue
+            case .hairline(let color):
+                hasher.combine(".hairline")
+                hasher.combine(color)
             }
         }
 
@@ -784,8 +799,11 @@ private class ImageKey: Hashable {
         self.url = url
         self.format = format
     }
-    
-    var hashValue: Int { return url.hashValue ^ format.hashValue }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
+        hasher.combine(format)
+    }
     
     var filenameSuffix: String {
         switch format {
