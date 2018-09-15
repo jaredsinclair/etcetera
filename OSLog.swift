@@ -135,7 +135,7 @@ public extension OSLog {
     /// - parameter format: A C-style format string.
     ///
     /// - parameter args: A list of arguments to the format string (if any).
-    @_inlineable
+    @inlinable
     public func log(format: StaticString, args: CVarArg...) {
         // Use the `(format:array:)` variant to prevent the compiler from
         // wrapping a single argument in an array it thinks you implied.
@@ -147,7 +147,7 @@ public extension OSLog {
     ///
     /// - parameter value: The value to be logged. If the value does not already
     /// conform to CustomLogRepresentable, a default implementation will used.
-    @_inlineable
+    @inlinable
     public func log(_ value: Any, privacy: Privacy = Options.defaultPrivacy, includeSourceLocation: Bool = Options.includeSourceLocationInValueLogs, file: String = #file, function: String = #function, line: Int = #line) {
         _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .default)
     }
@@ -162,7 +162,7 @@ public extension OSLog {
     /// - parameter format: A C-style format string.
     ///
     /// - parameter args: A list of arguments to the format string (if any).
-    @_inlineable
+    @inlinable
     public func info(format: StaticString, args: CVarArg...) {
         // Use the `(format:array:)` variant to prevent the compiler from
         // wrapping a single argument in an array it thinks you implied.
@@ -174,7 +174,7 @@ public extension OSLog {
     ///
     /// - parameter value: The value to be logged. If the value does not already
     /// conform to CustomLogRepresentable, a default implementation will used.
-    @_inlineable
+    @inlinable
     public func info(_ value: Any, privacy: Privacy = Options.defaultPrivacy, includeSourceLocation: Bool = Options.includeSourceLocationInValueLogs, file: String = #file, function: String = #function, line: Int = #line) {
         _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .info)
     }
@@ -182,7 +182,7 @@ public extension OSLog {
     // MARK: - Debug
 
     /// Logs the source location of the call site using the `.debug` type.
-    @_inlineable
+    @inlinable
     public func trace(file: String = #file, function: String = #function, line: Int = #line) {
         let representation = LogMessage("%{public}@ %{public}@ Line %ld", file, function, line)
         _etcetera_log(representation: representation, type: .debug)
@@ -196,7 +196,7 @@ public extension OSLog {
     /// - parameter format: A C-style format string.
     ///
     /// - parameter args: A list of arguments to the format string (if any).
-    @_inlineable
+    @inlinable
     public func debug(format: StaticString, args: CVarArg...) {
         // Use the `(format:array:)` variant to prevent the compiler from
         // wrapping a single argument in an array it thinks you implied.
@@ -208,7 +208,7 @@ public extension OSLog {
     ///
     /// - parameter value: The value to be logged. If the value does not already
     /// conform to CustomLogRepresentable, a default implementation will used.
-    @_inlineable
+    @inlinable
     public func debug(_ value: Any, privacy: Privacy = Options.defaultPrivacy, includeSourceLocation: Bool = Options.includeSourceLocationInValueLogs, file: String = #file, function: String = #function, line: Int = #line) {
         _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .debug)
     }
@@ -223,7 +223,7 @@ public extension OSLog {
     /// - parameter format: A C-style format string.
     ///
     /// - parameter args: A list of arguments to the format string (if any).
-    @_inlineable
+    @inlinable
     public func error(format: StaticString, args: CVarArg...) {
         // Use the `(format:array:)` variant to prevent the compiler from
         // wrapping a single argument in an array it thinks you implied.
@@ -235,7 +235,7 @@ public extension OSLog {
     ///
     /// - parameter value: The value to be logged. If the value does not already
     /// conform to CustomLogRepresentable, a default implementation will used.
-    @_inlineable
+    @inlinable
     public func error(_ value: Any, privacy: Privacy = Options.defaultPrivacy, includeSourceLocation: Bool = Options.includeSourceLocationInValueLogs, file: String = #file, function: String = #function, line: Int = #line) {
         _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .error)
     }
@@ -250,7 +250,7 @@ public extension OSLog {
     /// - parameter format: A C-style format string.
     ///
     /// - parameter args: A list of arguments to the format string (if any).
-    @_inlineable
+    @inlinable
     public func fault(format: StaticString, args: CVarArg...) {
         // Use the `(format:array:)` variant to prevent the compiler from
         // wrapping a single argument in an array it thinks you implied.
@@ -262,20 +262,22 @@ public extension OSLog {
     ///
     /// - parameter value: The value to be logged. If the value does not already
     /// conform to CustomLogRepresentable, a default implementation will used.
-    @_inlineable
+    @inlinable
     public func fault(_ value: Any, privacy: Privacy = Options.defaultPrivacy, includeSourceLocation: Bool = Options.includeSourceLocationInValueLogs, file: String = #file, function: String = #function, line: Int = #line) {
         _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .fault)
     }
 
-    // MARK: - Effectively Private, But Public So That @_inlineable Declarations Work
+    // MARK: - Internal
 
-    public func _etcetera_log(value: Any, privacy: Privacy, includeSourceLocation: Bool, file: String, function: String, line: Int, type: OSLogType) {
+    @usableFromInline
+    internal func _etcetera_log(value: Any, privacy: Privacy, includeSourceLocation: Bool, file: String, function: String, line: Int, type: OSLogType) {
         let loggable = (value as? CustomLogRepresentable) ?? AnyLoggable(value)
         let representation = loggable.logRepresentation(includeSourceLocation: includeSourceLocation, privacy: privacy, file: file, function: function, line: line)
         _etcetera_log(representation: representation, type: type)
     }
 
-    public func _etcetera_log(representation: LogMessage, type: OSLogType) {
+    @usableFromInline
+    internal func _etcetera_log(representation: LogMessage, type: OSLogType) {
         // http://www.openradar.me/33203955
         // Sigh...
         // or should I say
@@ -397,6 +399,7 @@ public struct LogMessage {
 
 extension CustomLogRepresentable {
 
+    @inlinable
     public func logRepresentation(privacy: OSLog.Privacy) -> LogMessage {
         switch privacy {
         case .visible:
@@ -406,6 +409,7 @@ extension CustomLogRepresentable {
         }
     }
 
+    @inlinable
     public func logRepresentation(privacy: OSLog.Privacy, file: String, function: String, line: Int) -> LogMessage {
         switch privacy {
         case .visible:
@@ -415,7 +419,8 @@ extension CustomLogRepresentable {
         }
     }
 
-    fileprivate func logRepresentation(includeSourceLocation: Bool, privacy: OSLog.Privacy, file: String, function: String, line: Int) -> LogMessage {
+    @usableFromInline
+    func logRepresentation(includeSourceLocation: Bool, privacy: OSLog.Privacy, file: String, function: String, line: Int) -> LogMessage {
         if includeSourceLocation {
             let filename = file.split(separator: "/").last.flatMap{String($0)} ?? file
             return logRepresentation(privacy: privacy, file: filename, function: function, line: line)
@@ -424,7 +429,8 @@ extension CustomLogRepresentable {
         }
     }
 
-    private var logDescription: String {
+    @usableFromInline
+    var logDescription: String {
         let value: Any = (self as? AnyLoggable)?.loggableValue ?? self
         if let string = value as? String {
             return string

@@ -378,7 +378,7 @@ public class ImageCache {
     private func registerObservers() {
         #if os(iOS)
             observers.append(NotificationCenter.default.addObserver(
-                forName: .UIApplicationDidEnterBackground,
+                forName: UIApplication.didEnterBackgroundNotification,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
@@ -553,16 +553,29 @@ extension ImageCache {
         /// using the other formats.
         case custom(editKey: String, block: (ImageCache.Image) -> ImageCache.Image)
 
-        public var hashValue: Int {
+        public func hash(into hasher: inout Hasher) {
             switch self {
             case .original:
-                return ".original".hashValue
+                hasher.combine(".original")
             case let .scaled(size, mode, bleed, opaque, cornerRadius, border, contentScale):
-                return ".scaled".hashValue ^ size.width.hashValue ^ size.height.hashValue ^ mode.hashValue ^ bleed.hashValue ^ opaque.hashValue ^ cornerRadius.hashValue ^ (border?.hashValue ?? 0) ^ contentScale.hashValue
+                hasher.combine(".scaled")
+                hasher.combine(size.width)
+                hasher.combine(size.height)
+                hasher.combine(mode)
+                hasher.combine(bleed)
+                hasher.combine(opaque)
+                hasher.combine(cornerRadius)
+                hasher.combine(border)
+                hasher.combine(contentScale)
             case let .round(size, border, contentScale):
-                return ".round".hashValue ^ size.width.hashValue ^ size.height.hashValue ^ (border?.hashValue ?? 0) ^ contentScale.hashValue
+                hasher.combine(".round")
+                hasher.combine(size.width)
+                hasher.combine(size.height)
+                hasher.combine(border)
+                hasher.combine(contentScale)
             case .custom(let key, _):
-                return ".custom".hashValue ^ key.hashValue
+                hasher.combine(".original")
+                hasher.combine(key)
             }
         }
 
@@ -627,9 +640,11 @@ extension ImageCache.Format {
 
         case hairline(ImageCache.Color)
 
-        public var hashValue: Int {
+        public func hash(into hasher: inout Hasher) {
             switch self {
-            case .hairline(let color): return ".hairline".hashValue ^ color.hashValue
+            case .hairline(let color):
+                hasher.combine(".hairline")
+                hasher.combine(color)
             }
         }
 
@@ -784,8 +799,11 @@ private class ImageKey: Hashable {
         self.url = url
         self.format = format
     }
-    
-    var hashValue: Int { return url.hashValue ^ format.hashValue }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
+        hasher.combine(format)
+    }
     
     var filenameSuffix: String {
         switch format {
@@ -860,14 +878,14 @@ private class MemoryCache<Key: Hashable, Value> {
     init() {
         #if os(iOS)
             observers.append(NotificationCenter.default.addObserver(
-                forName: .UIApplicationDidReceiveMemoryWarning,
+                forName: UIApplication.didReceiveMemoryWarningNotification,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
                     self?.removeAll()
             }))
             observers.append(NotificationCenter.default.addObserver(
-                forName: .UIApplicationDidEnterBackground,
+                forName: UIApplication.didEnterBackgroundNotification,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
@@ -1012,7 +1030,7 @@ private struct Request<Result> {
 #if os(iOS)
 private class _BackgroundTask {
 
-    private var taskId: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var taskId: UIBackgroundTaskIdentifier = .invalid
     
     static func start() -> _BackgroundTask? {
         let task = _BackgroundTask()
@@ -1025,13 +1043,13 @@ private class _BackgroundTask {
             if let safeHandler = handler { safeHandler() }
             self.end()
         }
-        return (self.taskId != UIBackgroundTaskInvalid)
+        return (self.taskId != .invalid)
     }
     
     func end() {
-        guard self.taskId != UIBackgroundTaskInvalid else { return }
+        guard self.taskId != .invalid else { return }
         let taskId = self.taskId
-        self.taskId = UIBackgroundTaskInvalid
+        self.taskId = .invalid
         UIApplication.shared.endBackgroundTask(taskId)
     }
 
@@ -1095,7 +1113,7 @@ extension FileManager {
     
     fileprivate func save(_ image: Image, to url: URL) {
         #if os(iOS)
-            guard let data = UIImagePNGRepresentation(image) else { return }
+            guard let data = image.pngData() else { return }
         #elseif os(OSX)
             guard let data = image.tiffRepresentation else { return }
         #endif

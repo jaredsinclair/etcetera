@@ -33,19 +33,19 @@ public class BackgroundTask {
             handler?()
             self.end()
         }
-        return (self.taskId != UIBackgroundTaskInvalid)
+        return (self.taskId != .invalid)
     }
 
     /// Ends the background task.
     public func end() {
-        guard self.taskId != UIBackgroundTaskInvalid else { return }
+        guard self.taskId != .invalid else { return }
         let taskId = self.taskId
-        self.taskId = UIBackgroundTaskInvalid
+        self.taskId = .invalid
         UIApplication.shared.endBackgroundTask(taskId)
     }
 
     public init() {}
 
-    private var taskId: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var taskId: UIBackgroundTaskIdentifier = .invalid
     
 }
