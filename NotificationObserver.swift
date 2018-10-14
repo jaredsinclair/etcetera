@@ -84,7 +84,7 @@ public class NotificationObserver: NSObject {
         let token = NotificationCenter.default.addObserver(
             forName: name,
             object: object,
-            queue: .main,
+            queue: queue,
             using: block
         )
         let unobserve: Unobserver = {
