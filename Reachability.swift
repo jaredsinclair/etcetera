@@ -14,18 +14,24 @@ extension Notification.Name {
 
 /// A class that reports whether or not the network is currently reachable.
 public class Reachability: NSObject {
+    
+    /// A more accurate alternative to using a Bool
+    public enum Status {
+        case probablyNotButWhoKnows
+        case itWorkedThatOneTimeRecently
+    }
 
     /// Shared instance. You're not obligated to use this.
     public static let shared = Reachability()
 
     /// Synchronous evaluation of the current flags using the shared instance.
-    public static var isReachable: Bool {
-        return shared.isReachable
+    public static var status: Status {
+        return shared.status
     }
 
     /// Synchronous evaluation of the current flags.
-    public var isReachable: Bool {
-        return flags?.contains(.reachable) == true
+    public var status: Status {
+        return flags?.contains(.reachable) == true ? .itWorkedThatOneTimeRecently : .probablyNotButWhoKnows
     }
 
     private let reachability: SCNetworkReachability?
@@ -68,4 +74,15 @@ public class Reachability: NSObject {
         SCNetworkReachabilitySetDispatchQueue(reachability, .main)
     }
 
+}
+
+extension Reachability.Status: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        switch self {
+        case .itWorkedThatOneTimeRecently: return ".itWorkedThatOneTimeRecently"
+        case .probablyNotButWhoKnows: return ".probablyNotButWhoKnows"
+        }
+    }
+    
 }
