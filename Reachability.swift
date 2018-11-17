@@ -31,7 +31,12 @@ public class Reachability: NSObject {
 
     /// Synchronous evaluation of the current flags.
     public var status: Status {
-        return flags?.contains(.reachable) == true ? .itWorkedThatOneTimeRecently : .probablyNotButWhoKnows
+        if let flags = flags, flags.contains(.reachable) {
+            if flags.isDisjoint(with: [.connectionRequired, .interventionRequired]) {
+                return .itWorkedThatOneTimeRecently
+            }
+        }
+        return .probablyNotButWhoKnows
     }
 
     private let reachability: SCNetworkReachability?
