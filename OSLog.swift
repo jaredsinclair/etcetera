@@ -87,7 +87,7 @@ import os.log
 ///
 /// If you have a type whose log output needs special finessing, extend it to
 /// conform to `CustomLogRepresentable`. See below for documentation.
-public extension OSLog {
+extension OSLog {
 
     // MARK: - Nested Types
 
