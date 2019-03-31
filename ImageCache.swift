@@ -810,14 +810,14 @@ private class ImageKey: Hashable {
         case .original:
             return "_original"
         case let .scaled(size, mode, bleed, opaque, radius, border, contentScale):
-            let base = "_scaled_\(Int(size.width),Int(size.height))_\(mode)_\(Int(bleed))_\(opaque)_\(Int(radius))_\(Int(contentScale))"
+            let base = "_scaled_\(Int(size.width))_\(Int(size.height))_\(mode)_\(Int(bleed))_\(opaque)_\(Int(radius))_\(Int(contentScale))"
             if let border = border, case .hairline(let color) = border {
                 return base + "_hairline(\(color))"
             } else {
                 return base + "_nil"
             }
         case let .round(size, border, contentScale):
-            let base = "_round_\(Int(size.width),Int(size.height))"
+            let base = "_round_\(Int(size.width))_\(Int(size.height))"
             if let border = border, case .hairline(let color) = border {
                 return base + "_hairline(\(color))" + "_\(Int(contentScale))"
             } else {
