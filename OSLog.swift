@@ -167,7 +167,14 @@ extension OSLog {
         // Use the `(format:array:)` variant to prevent the compiler from
         // wrapping a single argument in an array it thinks you implied.
         let representation = LogMessage(format: format, array: args)
-        _etcetera_log(representation: representation, type: .info)
+        #if targetEnvironment(simulator)
+        // @workaround for simulator bug in Xcode 10.2 and earlier:
+        // https://forums.developer.apple.com/thread/82736#348090
+        let type = OSLogType.default
+        #else
+        let type = OSLogType.info
+        #endif
+        _etcetera_log(representation: representation, type: type)
     }
 
     /// Logs a message using the `.info` type.
@@ -176,7 +183,14 @@ extension OSLog {
     /// conform to CustomLogRepresentable, a default implementation will used.
     @inlinable
     public func info(_ value: Any, privacy: Privacy = Options.defaultPrivacy, includeSourceLocation: Bool = Options.includeSourceLocationInValueLogs, file: String = #file, function: String = #function, line: Int = #line) {
-        _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .info)
+        #if targetEnvironment(simulator)
+        // @workaround for simulator bug in Xcode 10.2 and earlier:
+        // https://forums.developer.apple.com/thread/82736#348090
+        let type = OSLogType.default
+        #else
+        let type = OSLogType.info
+        #endif
+        _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: type)
     }
 
     // MARK: - Debug
@@ -184,8 +198,14 @@ extension OSLog {
     /// Logs the source location of the call site using the `.debug` type.
     @inlinable
     public func trace(file: String = #file, function: String = #function, line: Int = #line) {
-        let representation = LogMessage("%{public}@ %{public}@ Line %ld", file, function, line)
-        _etcetera_log(representation: representation, type: .debug)
+        #if targetEnvironment(simulator)
+        // @workaround for simulator bug in Xcode 10.2 and earlier:
+        // https://forums.developer.apple.com/thread/82736#348090
+        let type = OSLogType.default
+        #else
+        let type = OSLogType.debug
+        #endif
+        _etcetera_log(value: "<OSLog.trace>", privacy: .visible, includeSourceLocation: true, file: file, function: function, line: line, type: type)
     }
 
     /// Logs a developer-formatted message using the `.debug` type.
@@ -201,7 +221,14 @@ extension OSLog {
         // Use the `(format:array:)` variant to prevent the compiler from
         // wrapping a single argument in an array it thinks you implied.
         let representation = LogMessage(format: format, array: args)
-        _etcetera_log(representation: representation, type: .debug)
+        #if targetEnvironment(simulator)
+        // @workaround for simulator bug in Xcode 10.2 and earlier:
+        // https://forums.developer.apple.com/thread/82736#348090
+        let type = OSLogType.default
+        #else
+        let type = OSLogType.debug
+        #endif
+        _etcetera_log(representation: representation, type: type)
     }
 
     /// Logs a message using the `.debug` type.
@@ -210,7 +237,14 @@ extension OSLog {
     /// conform to CustomLogRepresentable, a default implementation will used.
     @inlinable
     public func debug(_ value: Any, privacy: Privacy = Options.defaultPrivacy, includeSourceLocation: Bool = Options.includeSourceLocationInValueLogs, file: String = #file, function: String = #function, line: Int = #line) {
-        _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: .debug)
+        #if targetEnvironment(simulator)
+        // @workaround for simulator bug in Xcode 10.2 and earlier:
+        // https://forums.developer.apple.com/thread/82736#348090
+        let type = OSLogType.default
+        #else
+        let type = OSLogType.debug
+        #endif
+        _etcetera_log(value: value, privacy: privacy, includeSourceLocation: includeSourceLocation, file: file, function: function, line: line, type: type)
     }
 
     // MARK: - Error
