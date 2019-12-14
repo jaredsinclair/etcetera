@@ -1,6 +1,6 @@
 //
 //  Activity.swift
-//  SodesFoundation
+//  Etcetera
 //
 //  Inspired by code created by Zachary Waldowski on 8/21/16.
 //  Copyright © 2018 Nice Boy LLC. All rights reserved.
