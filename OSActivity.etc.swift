@@ -17,11 +17,12 @@ import os.activity
 /// this Swift file into your target and call it a day. You must also:
 ///
 /// 1. Add `os_activity_shims.h` to the same target that contains this Swift
-/// file. If that target is a Swift framework, the header must be public.
+/// file. If that target is a Swift framework, the header must be listed among
+/// the "Public" section of that target's "Headers" build phase. If the target
+/// is an application, you must add an `#include` to the bridging header.
 ///
 /// 2. If your target is a Swift framework, add another public header that
 /// includes the shims header:
-///
 ///
 ///     #ifndef MyFramework_h
 ///     #define MyFramework_h
