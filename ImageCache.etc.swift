@@ -1157,7 +1157,7 @@ extension FileManager {
 
         var total = items.map { $0.fileSize }.reduce(0, +)
         var toDelete = [Item]()
-        items.forEach { item in
+        for item in items {
             guard total > limit else { break }
             total -= item.fileSize
             toDelete.append(item)
