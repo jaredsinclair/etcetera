@@ -61,8 +61,8 @@ extension OperationQueue {
     }
 
     public func sync(_ block: @escaping () -> Void) {
-        let op = BlockOperation(block: block)
-        addOperations([op], waitUntilFinished: true)
+        let operation = BlockOperation(block: block)
+        addOperations([operation], waitUntilFinished: true)
     }
 
 }

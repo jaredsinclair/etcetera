@@ -4,6 +4,7 @@
 //
 //  Copyright © 2018 Nice Boy LLC. All rights reserved.
 //
+// swiftlint:disable force_cast
 
 import UIKit
 

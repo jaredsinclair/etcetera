@@ -5,6 +5,7 @@
 //  Inspired by code created by Zachary Waldowski on 8/21/16.
 //  Copyright © 2018 Nice Boy LLC. All rights reserved.
 //
+// swiftlint:disable line_length - I dislike multi-line function signatures.
 
 import os.activity
 

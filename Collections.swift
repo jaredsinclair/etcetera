@@ -4,6 +4,7 @@
 //
 //  Copyright © 2018 Nice Boy LLC. All rights reserved.
 //
+// swiftlint:disable line_length - I dislike multi-line function signatures.
 
 /// Quality-of-life extension of RandomAccessCollection.
 extension RandomAccessCollection {

@@ -90,7 +90,7 @@ public class NotificationObserver: NSObject {
         let unobserve: Unobserver = {
             NotificationCenter.default.removeObserver(token)
         }
-        queue.asap{ [weak self] in
+        queue.asap { [weak self] in
             if let this = self {
                 this.tokens.append(token)
             } else {

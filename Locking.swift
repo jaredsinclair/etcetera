@@ -60,8 +60,8 @@ public final class ProtectedDictionary<Key: Hashable, Value> {
     /// Read/write access to the underlying dictionary storage as if you had
     /// used the `access(_:)` method to subscript the dictionary directly.
     public subscript(key: Key) -> Value? {
-        get { return protected.access{ $0[key] } }
-        set { protected.access{ $0[key] = newValue } }
+        get { return protected.access { $0[key] } }
+        set { protected.access { $0[key] = newValue } }
     }
 
     /// Accesses the protected value inside a balanced lock/unlock pair.

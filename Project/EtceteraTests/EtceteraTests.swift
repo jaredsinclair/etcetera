@@ -10,10 +10,10 @@ import XCTest
 @testable import Etcetera
 
 class EtceteraTests: XCTestCase {
-    
+
     func testLog() {
         let log = OSLog(subsystem: "com.niceboy.EtceteraTests", category: "Logging")
         log.log("Success!")
     }
-    
+
 }

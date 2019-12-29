@@ -4,6 +4,10 @@
 //
 //  Copyright © 2018 Nice Boy LLC. All rights reserved.
 //
+// swiftlint:disable file_length - This is intentionally a one-file, a drop-in.
+// swiftlint:disable identifier_name - Clarity!
+// swiftlint:disable line_length - I dislike multi-line function signatures.
+// swiftlint:disable function_parameter_count - Some problems have lots o' variables.
 
 import Foundation
 import os.log
@@ -456,7 +460,7 @@ extension CustomLogRepresentable {
     @usableFromInline
     func logRepresentation(includeSourceLocation: Bool, privacy: OSLog.Privacy, file: String, function: String, line: Int) -> LogMessage {
         if includeSourceLocation {
-            let filename = file.split(separator: "/").last.flatMap{String($0)} ?? file
+            let filename = file.split(separator: "/").last.flatMap { String($0) } ?? file
             return logRepresentation(privacy: privacy, file: filename, function: function, line: line)
         } else {
             return logRepresentation(privacy: privacy)
