@@ -5,6 +5,7 @@
 //  Created by Jared Sinclair on 12/21/19.
 //  Copyright © 2019 Nice Boy, LLC. All rights reserved.
 //
+// swiftlint:disable force_cast
 
 import UIKit
 

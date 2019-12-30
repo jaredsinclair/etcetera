@@ -4,6 +4,11 @@
 //
 //  Copyright © 2018 Nice Boy LLC. All rights reserved.
 //
+// swiftlint:disable file_length - This is intentionally a one-file, a drop-in.
+// swiftlint:disable identifier_name - Clarity!
+// swiftlint:disable line_length - I dislike multi-line function signatures.
+// swiftlint:disable nesting - Seriously, why do we even Swift then.
+// swiftlint:disable function_parameter_count - Some problems are hard.
 
 #if os(iOS)
 import UIKit
@@ -24,24 +29,24 @@ import AppKit
 public class ImageCache {
 
     // MARK: Shared Instance
-    
+
     /// The shared instance. You're not obligated to use this.
     public static let shared = ImageCache()
-    
+
     // MARK: Public Properties
 
     /// The default directory where ImageCache stores files on disk.
     public static var defaultDirectory: URL {
         return FileManager.default.caches.subdirectory(named: "Images")
     }
-    
+
     /// Disk storage will be automatically trimmed to this byte limit (by 
     /// trimming the least-recently accessed items first). Trimming will occur
     /// whenever the app enters the background.
     public var byteLimitForFileStorage: Bytes = .fromMegabytes(500) {
         didSet { trimStaleFiles() }
     }
-    
+
     /// Your app can provide something stronger than "\(url.hashValue)" if you
     /// will encounter images with very long file URLs that could collide with
     /// one another. The value returned from this function is used to form the
@@ -49,7 +54,7 @@ public class ImageCache {
     /// allowed file name length). Letting your app inject this functionality
     /// eliminates an awkward dependency on a stronger hashing algorithm.
     public var uniqueFilenameFromUrl: (URL) -> String
-    
+
     /// When `true` this will empty the in-memory cache when the app enters the
     /// background. This can help reduce the likelihood that your app will be
     /// terminated in order to reclaim memory for foregrounded applications.
@@ -58,9 +63,9 @@ public class ImageCache {
         get { return memoryCache.shouldRemoveAllObjectsWhenAppEntersBackground }
         set { memoryCache.shouldRemoveAllObjectsWhenAppEntersBackground = newValue }
     }
-    
+
     // MARK: Private Properties
-    
+
     private let directory: URL
     private let urlSession: URLSession
     private let formattingTaskRegistry = TaskRegistry<ImageKey, Image?>()
@@ -69,9 +74,9 @@ public class ImageCache {
     private let formattingQueue: OperationQueue
     private let workQueue: OperationQueue
     private var observers = [NSObjectProtocol]()
-    
+
     // MARK: Init / Deinit
-    
+
     /// Designated initializer.
     ///
     /// - parameter directory: The desired directory. This must not be a system-
@@ -98,15 +103,15 @@ public class ImageCache {
         FileManager.default.createDirectory(at: directory)
         registerObservers()
     }
-    
+
     deinit {
         observers.forEach {
             NotificationCenter.default.removeObserver($0)
         }
     }
-    
+
     // MARK: Public Methods
-    
+
     /// Retrieves an image from the specified URL, formatted to the requested
     /// format.
     ///
@@ -155,14 +160,14 @@ public class ImageCache {
             task?.end()
         }
         #endif
-        
+
         let key = ImageKey(url: url, format: format)
-        
+
         if let image = memoryCache[key] {
             completion(image)
             return .sync
         }
-        
+
         // Use a deferred value for `formattingRequestId` so that we can capture
         // a future reference to the formatting request ID. This will allow us
         // to cancel the request whether it's in the downloading or formatting
@@ -171,7 +176,7 @@ public class ImageCache {
 
         let formattingRequestId = DeferredValue<UUID>()
         let downloadRequestId = DeferredValue<UUID>()
-        
+
         checkForFormattedImage(from: url, key: key) { [weak self] cachedImage in
             guard let this = self else { completion(nil); return }
             if let image = cachedImage {
@@ -192,7 +197,7 @@ public class ImageCache {
                 }
             }
         }
-        
+
         return .async(cancellation: { [weak self] in
             #if os(iOS)
             defer { task?.end() }
@@ -206,13 +211,13 @@ public class ImageCache {
             }
         })
     }
-    
+
     /// Removes all the cached images from the in-memory cache only. Files on
     /// disk will not be removed.
     public func removeAllImagesFromMemory() {
         memoryCache.removeAll()
     }
-    
+
     /// Removes and recreates the directory containing all cached image files.
     /// Images cached in-memory will not be removed.
     public func removeAllFilesFromDisk() {
@@ -296,7 +301,7 @@ public class ImageCache {
                 self?.formattingQueue.cancelAllOperations()
             },
             taskCompletion: { [weak self] result in
-                result.map{ self?.memoryCache[key] = $0 }
+                result.map { self?.memoryCache[key] = $0 }
             },
             requestCompletion: completion
         )
@@ -359,22 +364,22 @@ public class ImageCache {
                 guard let image = Image(data: data) else { return nil }
                 return ImageDrawing.decompress(image)
             }()
-            onMain  {
+            onMain {
                 completion(image)
             }
         }
     }
-    
+
     private func fileUrl(forOriginalImageFrom url: URL) -> URL {
         let filename = uniqueFilenameFromUrl(url)
         return directory.appendingPathComponent(filename, isDirectory: false)
     }
-    
+
     private func fileUrl(forFormattedImageWithKey key: ImageKey) -> URL {
         let filename = uniqueFilenameFromUrl(key.url) + key.filenameSuffix
         return directory.appendingPathComponent(filename, isDirectory: false)
     }
-    
+
     private func registerObservers() {
         #if os(iOS)
             observers.append(NotificationCenter.default.addObserver(
@@ -386,7 +391,7 @@ public class ImageCache {
             }))
         #endif
     }
-    
+
     private func trimStaleFiles() {
         #if os(iOS)
         let task = _BackgroundTask.start()
@@ -401,7 +406,7 @@ public class ImageCache {
             #endif
         }
     }
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -579,7 +584,7 @@ extension ImageCache {
             }
         }
 
-        public static func ==(lhs: Format, rhs: Format) -> Bool {
+        public static func == (lhs: Format, rhs: Format) -> Bool {
             switch (lhs, rhs) {
             case (.original, .original):
                 return true
@@ -648,7 +653,7 @@ extension ImageCache.Format {
             }
         }
 
-        public static func ==(lhs: Border, rhs: Border) -> Bool {
+        public static func == (lhs: Border, rhs: Border) -> Bool {
             switch (lhs, rhs) {
             case let (.hairline(left), .hairline(right)): return left == right
             }
@@ -681,7 +686,7 @@ extension ImageCache.Format {
 ///
 /// - Note: This is public since it may be useful outside this file.
 public enum /*scope*/ ImageDrawing {
-    
+
     // MARK: Common
 
     /// Draws `image` using the specified format.
@@ -701,7 +706,7 @@ public enum /*scope*/ ImageDrawing {
     }
 
     // MARK: macOS
-    
+
     #if os(OSX)
     fileprivate static func decompress(_ image: Image) -> Image {
         // Not yet implemented.
@@ -718,9 +723,9 @@ public enum /*scope*/ ImageDrawing {
         return image
     }
     #endif
-    
+
     // MARK: iOS
-    
+
     #if os(iOS)
     fileprivate static func decompress(_ image: Image) -> Image {
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1)) // Size doesn't matter.
@@ -779,7 +784,7 @@ public enum /*scope*/ ImageDrawing {
         return UIGraphicsGetImageFromCurrentImageContext() ?? image
     }
     #endif
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -794,7 +799,7 @@ private class ImageKey: Hashable {
 
     /// The format used when processing the cached image.
     let format: ImageCache.Format
-    
+
     init(url: URL, format: ImageCache.Format) {
         self.url = url
         self.format = format
@@ -804,7 +809,7 @@ private class ImageKey: Hashable {
         hasher.combine(url)
         hasher.combine(format)
     }
-    
+
     var filenameSuffix: String {
         switch format {
         case .original:
@@ -827,11 +832,11 @@ private class ImageKey: Hashable {
             return "_custom_\(key)"
         }
     }
-    
-    static func ==(lhs: ImageKey, rhs: ImageKey) -> Bool {
+
+    static func == (lhs: ImageKey, rhs: ImageKey) -> Bool {
         return lhs.url == rhs.url && lhs.format == rhs.format
     }
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -858,23 +863,21 @@ private enum DownloadResult {
 private class MemoryCache<Key: Hashable, Value> {
 
     var shouldRemoveAllObjectsWhenAppEntersBackground = false
-    
+
     private var items = _ProtectedDictionary<Key, Value>()
     private var observers = [NSObjectProtocol]()
-    
+
     subscript(key: Key) -> Value? {
         get { return items[key] }
         set { items[key] = newValue }
     }
 
     subscript(filter: (Key) -> Bool) -> [Key: Value] {
-        get {
-            return items.access {
-                $0.filter{ filter($0.key) }
-            }
+        return items.access {
+            $0.filter { filter($0.key) }
         }
     }
-    
+
     init() {
         #if os(iOS)
             observers.append(NotificationCenter.default.addObserver(
@@ -896,15 +899,15 @@ private class MemoryCache<Key: Hashable, Value> {
             }))
         #endif
     }
-    
+
     deinit {
         observers.forEach(NotificationCenter.default.removeObserver)
     }
-    
+
     func removeAll() {
-        items.access{ $0.removeAll() }
+        items.access { $0.removeAll() }
     }
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -920,14 +923,14 @@ private class DeferredValue<T> {
 //------------------------------------------------------------------------------
 
 private class TaskRegistry<TaskID: Hashable, Result> {
-    
+
     typealias RequestID = UUID
     typealias Finish = (Result) -> Void
     typealias TaskType = Task<TaskID, Result>
     typealias RequestType = Request<Result>
 
     private var protectedTasks = _Protected<[TaskID: TaskType]>([:])
-    
+
     func addRequest(taskId: TaskID, workQueue: OperationQueue, taskExecution: @escaping (@escaping Finish) -> Void, taskCancellation: @escaping () -> Void, taskCompletion: @escaping TaskType.Completion, requestCompletion: @escaping RequestType.Completion) -> RequestID {
         let request = RequestType(completion: requestCompletion)
         protectedTasks.access { tasks in
@@ -943,20 +946,20 @@ private class TaskRegistry<TaskID: Hashable, Result> {
                 task.requests[request.id] = request
                 tasks[taskId] = task
                 let finish: Finish = { [weak self] result in
-                    onMain{ self?.finishTask(withId: taskId, result: result) }
+                    onMain { self?.finishTask(withId: taskId, result: result) }
                 }
                 // `deferred(on:block:)` will dispatch to next main runloop then
                 // from there dispatch to a global queue, ensuring that the
                 // completion block cannot be executed before this method returns.
-                deferred(on: workQueue){ taskExecution(finish) }
+                deferred(on: workQueue) { taskExecution(finish) }
             }
         }
         return request.id
     }
-    
+
     func cancelRequest(withId id: RequestID) {
         let taskCancellation: TaskType.Cancellation? = protectedTasks.access { tasks in
-            guard var (_, task) = tasks.first(where:{ $0.value.requests[id] != nil }) else { return nil }
+            guard var (_, task) = tasks.first(where: { $0.value.requests[id] != nil }) else { return nil }
             task.requests[id] = nil
             let shouldCancelTask = task.requests.isEmpty
             if shouldCancelTask {
@@ -969,12 +972,12 @@ private class TaskRegistry<TaskID: Hashable, Result> {
         }
         taskCancellation?()
     }
-    
+
     private func finishTask(withId id: TaskID, result: Result) {
         let (taskCompletion, requestCompletions): (TaskType.Completion?, [RequestType.Completion]?) = protectedTasks.access { tasks in
             let task = tasks[id]
             tasks[id] = nil
-            return (task?.completion, task?.requests.values.map{ $0.completion })
+            return (task?.completion, task?.requests.values.map { $0.completion })
         }
         // Per my standard habit, completion handlers are always performed on
         // the main queue.
@@ -983,11 +986,11 @@ private class TaskRegistry<TaskID: Hashable, Result> {
         }
         if let completions = requestCompletions {
             onMain {
-                completions.forEach{ $0(result) }
+                completions.forEach { $0(result) }
             }
         }
     }
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -998,18 +1001,18 @@ private struct Task<TaskID: Hashable, Result> {
 
     typealias Cancellation = () -> Void
     typealias Completion = (Result) -> Void
-    
+
     var requests = [UUID: Request<Result>]()
     let id: TaskID
     let cancellation: Cancellation
     let completion: Completion
-    
+
     init(id: TaskID, cancellation: @escaping Cancellation, completion: @escaping Completion) {
         self.id = id
         self.cancellation = cancellation
         self.completion = completion
     }
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -1031,13 +1034,13 @@ private struct Request<Result> {
 private class _BackgroundTask {
 
     private var taskId: UIBackgroundTaskIdentifier = .invalid
-    
+
     static func start() -> _BackgroundTask? {
         let task = _BackgroundTask()
         let successful = task.startWithExpirationHandler(handler: nil)
         return (successful) ? task : nil
     }
-    
+
     func startWithExpirationHandler(handler: (() -> Void)?) -> Bool {
         self.taskId = UIApplication.shared.beginBackgroundTask {
             if let safeHandler = handler { safeHandler() }
@@ -1045,7 +1048,7 @@ private class _BackgroundTask {
         }
         return (self.taskId != .invalid)
     }
-    
+
     func end() {
         guard self.taskId != .invalid else { return }
         let taskId = self.taskId
@@ -1073,7 +1076,7 @@ extension URL {
 //------------------------------------------------------------------------------
 
 extension FileManager {
-    
+
     fileprivate var caches: URL {
         #if os(iOS)
             return urls(for: .cachesDirectory, in: .userDomainMask).first!
@@ -1082,7 +1085,7 @@ extension FileManager {
             return library.appendingPathComponent("Caches", isDirectory: true)
         #endif
     }
-    
+
     fileprivate func createDirectory(at url: URL) {
         do {
             try createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
@@ -1090,19 +1093,19 @@ extension FileManager {
             assertionFailure("Unable to create directory at \(url). Error: \(error)")
         }
     }
-    
+
     fileprivate func fileExists(at url: URL) -> Bool {
         return fileExists(atPath: url.path)
     }
-    
+
     fileprivate func moveFile(from: URL, to: URL) -> Bool {
         if fileExists(atPath: to.path) {
-            return didntThrow{ _ = try replaceItemAt(to, withItemAt: from) }
+            return didntThrow { _ = try replaceItemAt(to, withItemAt: from) }
         } else {
-            return didntThrow{ _ = try moveItem(at: from, to: to) }
+            return didntThrow { _ = try moveItem(at: from, to: to) }
         }
     }
-    
+
     fileprivate func image(fromFileAt url: URL) -> Image? {
         if let data = try? Data(contentsOf: url) {
             return Image(data: data)
@@ -1110,7 +1113,7 @@ extension FileManager {
             return nil
         }
     }
-    
+
     fileprivate func save(_ image: Image, to url: URL) {
         #if os(iOS)
             guard let data = image.pngData() else { return }
@@ -1124,23 +1127,23 @@ extension FileManager {
             try data.write(to: url, options: .atomic)
         } catch {}
     }
-    
+
     fileprivate func removeFilesByDate(inDirectory directory: URL, untilWithinByteLimit limit: UInt) {
-        
+
         struct Item {
             let url: NSURL
             let fileSize: UInt
             let dateModified: Date
         }
-        
+
         let keys: [URLResourceKey] = [.fileSizeKey, .contentModificationDateKey]
-        
+
         guard let urls = try? contentsOfDirectory(
             at: directory,
             includingPropertiesForKeys: keys,
             options: .skipsHiddenFiles
             ) else { return }
-        
+
         let items: [Item] = (urls as [NSURL])
             .compactMap { url -> Item? in
                 guard let values = try? url.resourceValues(forKeys: keys) else { return nil }
@@ -1150,21 +1153,21 @@ extension FileManager {
                     dateModified: (values[.contentModificationDateKey] as? Date) ?? Date.distantPast
                 )
             }
-            .sorted{ $0.dateModified < $1.dateModified }
-        
-        var total = items.map{ $0.fileSize }.reduce(0, +)
+            .sorted { $0.dateModified < $1.dateModified }
+
+        var total = items.map { $0.fileSize }.reduce(0, +)
         var toDelete = [Item]()
-        for (_, item) in items.enumerated() {
+        for item in items {
             guard total > limit else { break }
             total -= item.fileSize
             toDelete.append(item)
         }
-        
+
         toDelete.forEach {
             _ = try? self.removeItem(at: $0.url as URL)
         }
     }
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -1179,7 +1182,7 @@ extension Image {
         return Image(data: data)
     }
     #endif
-    
+
     fileprivate func sizeThatFills(_ other: CGSize) -> CGSize {
         guard !size.equalTo(.zero) else { return other }
         let h = size.height
@@ -1192,7 +1195,7 @@ extension Image {
             return CGSize(width: w * widthRatio, height: h * widthRatio)
         }
     }
-    
+
     fileprivate func sizeThatFits(_ other: CGSize) -> CGSize {
         guard !size.equalTo(.zero) else { return other }
         let h = size.height
@@ -1205,7 +1208,7 @@ extension Image {
             return CGSize(width: w * heightRatio, height: h * heightRatio)
         }
     }
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -1213,15 +1216,15 @@ extension Image {
 //------------------------------------------------------------------------------
 
 private func onMain(_ block: @escaping () -> Void) {
-    DispatchQueue.main.async{ block() }
+    DispatchQueue.main.async { block() }
 }
 
 private func deferred(on queue: OperationQueue, block: @escaping () -> Void) {
-    onMain{ queue.addOperation(block) }
+    onMain { queue.addOperation(block) }
 }
 
 private func didntThrow(_ block: () throws -> Void) -> Bool {
-    do{ try block(); return true } catch { return false }
+    do { try block(); return true } catch { return false }
 }
 
 //------------------------------------------------------------------------------
@@ -1262,8 +1265,8 @@ private final class _ProtectedDictionary<Key: Hashable, Value> {
     }
 
     fileprivate subscript(key: Key) -> Value? {
-        get { return protected.access{ $0[key] } }
-        set { protected.access{ $0[key] = newValue } }
+        get { return protected.access { $0[key] } }
+        set { protected.access { $0[key] = newValue } }
     }
 
     fileprivate func access<Return>(_ block: (inout Contents) throws -> Return) rethrows -> Return {

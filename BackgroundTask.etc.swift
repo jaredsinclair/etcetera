@@ -47,5 +47,5 @@ public class BackgroundTask {
     public init() {}
 
     private var taskId: UIBackgroundTaskIdentifier = .invalid
-    
+
 }

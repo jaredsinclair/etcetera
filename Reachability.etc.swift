@@ -14,7 +14,7 @@ extension Notification.Name {
 
 /// A class that reports whether or not the network is currently reachable.
 public class Reachability: NSObject {
-    
+
     /// A more accurate alternative to using a Bool
     public enum Status {
         case probablyNotButWhoKnows
@@ -74,7 +74,13 @@ public class Reachability: NSObject {
             this.flags = flags
         }
         let selfPtr = Unmanaged.passUnretained(self).toOpaque()
-        var context = SCNetworkReachabilityContext(version: 0, info: selfPtr, retain: nil, release: nil, copyDescription: nil)
+        var context = SCNetworkReachabilityContext(
+            version: 0,
+            info: selfPtr,
+            retain: nil,
+            release: nil,
+            copyDescription: nil
+        )
         SCNetworkReachabilitySetCallback(reachability, callback, &context)
         SCNetworkReachabilitySetDispatchQueue(reachability, .main)
     }
@@ -82,12 +88,12 @@ public class Reachability: NSObject {
 }
 
 extension Reachability.Status: CustomDebugStringConvertible {
-    
+
     public var debugDescription: String {
         switch self {
         case .itWorkedThatOneTimeRecently: return ".itWorkedThatOneTimeRecently"
         case .probablyNotButWhoKnows: return ".probablyNotButWhoKnows"
         }
     }
-    
+
 }

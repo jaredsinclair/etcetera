@@ -4,6 +4,7 @@
 //
 //  Copyright © 2018 Nice Boy LLC. All rights reserved.
 //
+// swiftlint:disable nesting - Seriously, why do we even Swift then.
 
 import Foundation
 
