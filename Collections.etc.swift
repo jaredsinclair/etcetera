@@ -16,6 +16,18 @@ extension RandomAccessCollection {
 
 }
 
+/// Quality-of-life extension of RangeReplaceableCollection.
+extension RangeReplaceableCollection where Element : AnyObject {
+
+    /// Removes the first element that has the same identity as `element`.
+    public mutating func removeFirstInstance(of element: Element) {
+        if let index = firstIndex(where: { $0 === element }) {
+            remove(at: index)
+        }
+    }
+
+}
+
 /// Quality-of-life extension of Sequence.
 public extension Sequence {
 
