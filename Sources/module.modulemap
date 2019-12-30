@@ -1,0 +1,6 @@
+framework module Etcetera {
+    explicit module OSActivityShims {
+        header "OSActivityShims.h"
+    }
+}
+
