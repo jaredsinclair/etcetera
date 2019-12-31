@@ -1,0 +1,3 @@
+module OSActivityShims {
+    header "OSActivityShims.h"
+}
