@@ -11,6 +11,8 @@
 // swiftlint:disable nesting - Seriously, why do we even Swift then.
 // swiftlint:disable function_parameter_count - Some problems are hard.
 
+import CryptoKit
+
 #if os(iOS)
 import UIKit
 #elseif os(OSX)
@@ -50,12 +52,8 @@ public final class ImageCache {
         didSet { trimStaleFiles() }
     }
 
-    /// Your app can provide something stronger than "\(url.hashValue)" if you
-    /// will encounter images with very long file URLs that could collide with
-    /// one another. The value returned from this function is used to form the
-    /// filename for cached images (since URLs could be longer than the max
-    /// allowed file name length). Letting your app inject this functionality
-    /// eliminates an awkward dependency on a stronger hashing algorithm.
+    /// Your app can provide something stronger than the default implementation
+    /// (a string representation of a SHA1 hash) if so desired.
     public var uniqueFilenameFromUrl: (URL) -> String
 
     /// When `true` this will empty the in-memory cache when the app enters the
@@ -92,7 +90,7 @@ public final class ImageCache {
     /// background, or when this value is changed. Provide a `nil` value to
     /// allow for unbounded disk usage. YOLO.
     public init(directory: URL = ImageCache.defaultDirectory, byteLimitForFileStorage: Bytes? = .fromMegabytes(500)) {
-        self.uniqueFilenameFromUrl = { return "\($0.hashValue)" }
+        self.uniqueFilenameFromUrl = Insecure.SHA1.filename(for:)
         self.directory = directory
         self.byteLimitForFileStorage = byteLimitForFileStorage
         self.urlSession = {
@@ -1186,4 +1184,28 @@ private func deferred(on queue: OperationQueue, block: @escaping () -> Void) {
 
 private func didntThrow(_ block: () throws -> Void) -> Bool {
     do { try block(); return true } catch { return false }
+}
+
+//------------------------------------------------------------------------------
+// MARK: - Default Key Hashing
+//------------------------------------------------------------------------------
+
+private extension Insecure.SHA1 {
+
+    static func filename(for url: URL) -> String {
+        guard let bytes = url.absoluteString.data(using: .utf8) else {
+            assertionFailure("Unable to obtain key bytes for \(url)")
+            return url.absoluteString
+        }
+        return Insecure.SHA1.hash(data: bytes).stringRepresentation
+    }
+
+}
+
+private extension Insecure.SHA1Digest {
+
+    var stringRepresentation: String {
+        map { String(format: "%02hhx", $0) }.joined()
+    }
+
 }
