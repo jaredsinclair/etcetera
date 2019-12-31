@@ -71,7 +71,7 @@ public final class ImageCache {
     private let urlSession: URLSession
     private let formattingTaskRegistry = TaskRegistry<ImageKey, Image?>()
     private let downloadTaskRegistry = TaskRegistry<ImageKey, DownloadResult?>()
-    private let userImageDiskTaskRegistry = TaskRegistry<ImageKey, Void>()
+    private let userImageDiskTaskRegistry = TaskRegistry<ImageKey, URL>()
     private let memoryCache = MemoryCache<ImageKey, Image>()
     private let formattingQueue: OperationQueue
     private let workQueue: OperationQueue
@@ -200,23 +200,24 @@ public final class ImageCache {
                 completion(nil)
                 return
             }
-            let fileUrl = self.fileUrl(forOriginalImageWithKey: actualKey)
             var saveOperation: Operation?
             _ = self.userImageDiskTaskRegistry.addRequest(
                 taskId: actualKey,
                 workQueue: self.workQueue,
                 taskExecution: { finish in
                     let blockOperation = BlockOperation {
+                        let fileUrl = self.fileUrl(forOriginalImageWithKey: actualKey)
                         FileManager.default.save(image, to: fileUrl)
+                        finish(fileUrl)
                     }
                     saveOperation = blockOperation
                     self.formattingQueue.addOperation(blockOperation)
                 }, taskCancellation: {
                     saveOperation?.cancel()
-                }, taskCompletion: {
+                }, taskCompletion: { _ in
                     // no-op
-                }, requestCompletion: {
-                    completion(fileUrl)
+                }, requestCompletion: { url in
+                    completion(url)
                 }
             )
         }
