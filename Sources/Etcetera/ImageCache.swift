@@ -197,7 +197,7 @@ public final class ImageCache {
             var saveOperation: Operation?
             _ = self.userImageDiskTaskRegistry.addRequest(
                 taskId: actualKey,
-                workQueue: self.formattingQueue,
+                workQueue: self.workQueue,
                 taskExecution: { finish in
                     let blockOperation = BlockOperation {
                         let url = self.fileUrl(forOriginalImageWithKey: actualKey)
@@ -222,7 +222,7 @@ public final class ImageCache {
     /// This method will resolve to a `nil` image if the image has not already
     /// been added via `add(userProvidedImage:to:key:)`
     @discardableResult
-    public func userProvidedImage(originalImageKey key: String, format: Format = .original, completion: @escaping (Image?) -> Void) -> CallbackMode {
+    public func userProvidedImage(key: String, format: Format = .original, completion: @escaping (Image?) -> Void) -> CallbackMode {
         guard let actualKey = self.actualKey(forUserProvidedKey: key, format: format) else {
             completion(nil)
             return .sync
