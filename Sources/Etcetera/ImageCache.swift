@@ -187,21 +187,27 @@ public final class ImageCache {
     ///
     /// - parameter key: A developer-provided key uniquely identifying this
     /// image. This key should be as unique as a URL to a remote image might be.
-    public func add(userProvidedImage image: Image, to destinations: [UserProvidedImageDestination] = UserProvidedImageDestination.allCases, key: String) {
+    ///
+    /// - parameter completion: Performed when the image has been added to all
+    /// the requested destinations. May or may not be called synchronously.
+    public func add(userProvidedImage image: Image, to destinations: [UserProvidedImageDestination] = UserProvidedImageDestination.allCases, key: String, completion: @escaping (_ fileUrl: URL?) -> Void) {
         guard let actualKey = self.actualKey(forUserProvidedKey: key, format: .original) else { return }
         onMain {
             if destinations.contains(.memory) {
                 self.memoryCache[actualKey] = image
             }
-            guard destinations.contains(.disk) else { return }
+            guard destinations.contains(.disk) else {
+                completion(nil)
+                return
+            }
+            let fileUrl = self.fileUrl(forOriginalImageWithKey: actualKey)
             var saveOperation: Operation?
             _ = self.userImageDiskTaskRegistry.addRequest(
                 taskId: actualKey,
                 workQueue: self.workQueue,
                 taskExecution: { finish in
                     let blockOperation = BlockOperation {
-                        let url = self.fileUrl(forOriginalImageWithKey: actualKey)
-                        FileManager.default.save(image, to: url)
+                        FileManager.default.save(image, to: fileUrl)
                     }
                     saveOperation = blockOperation
                     self.formattingQueue.addOperation(blockOperation)
@@ -210,7 +216,7 @@ public final class ImageCache {
                 }, taskCompletion: {
                     // no-op
                 }, requestCompletion: {
-                    // no-op
+                    completion(fileUrl)
                 }
             )
         }
