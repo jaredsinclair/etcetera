@@ -420,7 +420,8 @@ public final class ImageCache {
     }
 
     private func fileUrl(forOriginalImageWithKey key: ImageKey) -> URL {
-        let filename = uniqueFilenameFromUrl(key.url)
+        let originalKey = ImageKey(url: key.url, format: .original)
+        let filename = uniqueFilenameFromUrl(key.url) + originalKey.filenameSuffix
         return directory.appendingPathComponent(filename, isDirectory: false)
     }
 
