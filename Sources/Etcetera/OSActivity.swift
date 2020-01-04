@@ -17,26 +17,6 @@ import Etcetera.OSActivityShims
 
 /// Swift-native, quality-of-life wrapper around os.activity.
 ///
-/// ## Project Setup
-///
-/// `Activity` depends upon a C header of shims that expose crucial
-/// `os.activity` functions to Swift. This means that you cannot simply drop
-/// this Swift file into your target and call it a day. You must also:
-///
-/// 1. Add `os_activity_shims.h` to the same target that contains this Swift
-/// file. If that target is a Swift framework, the header must be listed among
-/// the "Public" section of that target's "Headers" build phase. If the target
-/// is an application, you must add an `#include` to the bridging header.
-///
-/// 2. If your target is a Swift framework, add another public header that
-/// includes the shims header:
-///
-///     #ifndef MyFramework_h
-///     #define MyFramework_h
-///     #include <MyFramework/os_activity_shims.h>
-///     #endif /* MyFramework_h */
-///
-///
 /// ## Recommended Usage
 ///
 /// It is recommended that you do **not** re-use an instance of a given
