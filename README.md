@@ -4,7 +4,7 @@ Apple platform utilities I need on almost every project but which, individually,
 
 ## So What
 
-Etcetera is a mish-mash of extensions and utility classes. Every file in this repository is (mostly) intended to stand on its own, requiring nothing except some first-party Apple frameworks. Sometimes, like with `ImageCache`, that means a given file is embarassingly long, but that's a tradeoff I'm willing to make. Nothing here is meant to be a permanent solution for the lifetime of a world-class project, but rather an accelerant when setting up a new project.
+Etcetera is a mish-mash of extensions and utility classes. Every file in this repository is (mostly) intended to stand on its own, requiring nothing except some first-party Apple frameworks.
 
 ## Usage
 
