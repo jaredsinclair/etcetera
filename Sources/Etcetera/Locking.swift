@@ -52,6 +52,7 @@ public final class Protected<T> {
 /// A dictionary-like object that provides synchronized read/writes via an
 /// underlying `Protected` value.
 public final class ProtectedDictionary<Key: Hashable, Value> {
+
     private let protected: Protected<[Key: Value]>
 
     public init(_ contents: [Key: Value] = [:]) {
@@ -72,4 +73,9 @@ public final class ProtectedDictionary<Key: Hashable, Value> {
     public func access<Return>(_ block: (inout [Key: Value]) throws -> Return) rethrows -> Return {
         return try protected.access(block)
     }
+
+    public func removeAll() {
+        protected.access { $0.removeAll() }
+    }
+
 }
