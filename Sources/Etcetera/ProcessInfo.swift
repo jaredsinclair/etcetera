@@ -73,4 +73,9 @@ extension ProcessInfo {
         return processInfo.arguments.contains(string)
     }
 
+    /// Returns `true` if the app is running as a test runner for unit tests.
+    public static var isRunningInUnitTests: Bool {
+        processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
+
 }
