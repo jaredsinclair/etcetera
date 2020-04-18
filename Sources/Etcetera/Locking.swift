@@ -6,18 +6,33 @@
 //  Copyright © 2015 Nice Boy LLC. All rights reserved.
 //
 
-import Darwin
+import os.lock
 
 /// A high-performance lock supported by all Apple platforms.
+///
+/// This lock is **not** recursive.
 public final class Lock {
-    private var lock = os_unfair_lock()
 
-    public init() {}
+    /// See WWDC 2016 Session 720. Using C struct locks like `pthread_mutex_t`
+    /// or `os_unfair_lock` directly from Swift code is discouraged because of
+    /// Swift's assumption that value types can be moved around freely in
+    /// memory. Instead we have to manually manage memory here to ensure that
+    /// the lock struct has a fixed address during its lifetime.
+    private let lock = UnsafeMutablePointer<os_unfair_lock>.allocate(capacity: 1)
+
+    public init() {
+        lock.initialize(to: os_unfair_lock())
+    }
+
+    deinit {
+        lock.deinitialize(count: 1)
+        lock.deallocate()
+    }
 
     /// Performs `block` inside a balanced lock/unlock pair.
     public func locked<T>(_ block: () throws -> T) rethrows -> T {
-        os_unfair_lock_lock(&lock)
-        defer { os_unfair_lock_unlock(&lock) }
+        os_unfair_lock_lock(lock)
+        defer { os_unfair_lock_unlock(lock) }
         return try block()
     }
 }
