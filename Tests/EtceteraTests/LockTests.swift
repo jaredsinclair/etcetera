@@ -1,9 +1,9 @@
 //
 //  LockTests.swift
 //  EtceteraTests
-//  
 //
 //  Created by Jared Sinclair on 4/18/20.
+//  Copyright © 2020 Nice Boy LLC. All rights reserved.
 //
 // Based on code by Peter Steinberger from:
 // https://gist.github.com/steipete/36350a8a60693d440954b95ea6cbbafc
