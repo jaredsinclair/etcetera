@@ -11,13 +11,7 @@ let package = Package(
         .library(name: "Etcetera", targets: ["Etcetera"])
     ],
     targets: [
-        .target(
-            name: "OSActivityShims"),
-        .target(
-            name: "Etcetera",
-            dependencies: [
-                "OSActivityShims"
-            ]),
+        .target(name: "Etcetera"),
         .testTarget(name: "EtceteraTests",
             dependencies: [
                 "Etcetera"

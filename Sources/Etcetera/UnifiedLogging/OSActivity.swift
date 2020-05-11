@@ -9,12 +9,6 @@
 
 import os.activity
 
-#if SWIFT_PACKAGE
-import OSActivityShims
-#elseif XCODE
-import Etcetera.OSActivityShims
-#endif
-
 /// Swift-native, quality-of-life wrapper around os.activity.
 ///
 /// ## Recommended Usage
@@ -50,9 +44,12 @@ public struct Activity {
     /// Swift-native type that corresponds to OS_ACTIVITY_FLAGs.
     public struct Options: OptionSet {
         public let rawValue: UInt32
+
         public init(rawValue: UInt32) {
             self.rawValue = rawValue
         }
+
+        public var flagValue: os_activity_flag_t { os_activity_flag_t(rawValue) }
 
         /// Equivalent to `OS_ACTIVITY_FLAG_DETACHED`.
         public static let detached = Options(rawValue: OS_ACTIVITY_FLAG_DETACHED.rawValue)
@@ -86,19 +83,26 @@ public struct Activity {
     /// fundamentals, always defined using the value from the caller's context,
     /// not the callee's context.
     public init(_ label: StaticString, parent: Activity = .current(), options: Options = [], dso: UnsafeRawPointer = #dsohandle) {
-        self.init(label.withUTF8Buffer { (buffer) in
-            _etcetera_os_activity_create(dso, buffer.baseAddress, parent.reference, options.rawValue)
+        self.init(label.withUTF8Buffer { buffer -> os_activity_t in
+            guard let base = buffer.baseAddress else {
+                fatalError("Unable to acquire a buffer pointer to the `label`.")
+            }
+            return base.withMemoryRebound(to: Int8.self, capacity: buffer.count, { pointer in
+                _os_activity_create(.init(mutating: dso), pointer, parent.reference, options.flagValue)
+            })
         })
     }
 
     /// - returns: Returns a new Activity instance wrapping `OS_ACTIVITY_NONE`.
     public static func none() -> Activity {
-        return Activity(_etcetera_os_activity_none())
+        let OS_ACTIVITY_NONE = unsafeBitCast(dlsym(UnsafeMutableRawPointer(bitPattern: -2), "_os_activity_none"), to: Unmanaged<os_activity_t>.self)
+        return Activity(OS_ACTIVITY_NONE.takeUnretainedValue())
     }
 
     /// - returns: Returns a new Activity instance wrapping `OS_ACTIVITY_CURRENT`.
     public static func current() -> Activity {
-        return Activity(_etcetera_os_activity_current())
+        let OS_ACTIVITY_CURRENT = unsafeBitCast(dlsym(UnsafeMutableRawPointer(bitPattern: -2), "_os_activity_current"), to: Unmanaged<os_activity_t>.self)
+        return Activity(OS_ACTIVITY_CURRENT.takeUnretainedValue())
     }
 
     /// Designated initializer, wrapping the underlying activity.
@@ -127,7 +131,12 @@ public struct Activity {
     /// not the callee's context.
     public static func labelUserAction(_ userAction: StaticString, fromContainingBinary dso: UnsafeRawPointer = #dsohandle) {
         userAction.withUTF8Buffer { buffer in
-            _etcetera_os_activity_label_useraction(dso, buffer.baseAddress)
+            guard let base = buffer.baseAddress else {
+                fatalError("Unable to acquire a buffer pointer to the `label`.")
+            }
+            base.withMemoryRebound(to: Int8.self, capacity: buffer.count, { pointer in
+                _os_activity_label_useraction(.init(mutating: dso), pointer)
+            })
         }
     }
 
