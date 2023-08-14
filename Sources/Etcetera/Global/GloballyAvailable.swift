@@ -19,7 +19,7 @@ public protocol GloballyAvailable {
     /// Produces an instance of `Self` on demand. This method is called from the
     /// shared dependency container when a cached instance of `Self` cannot be
     /// found in the cache.
-    static func make(container: Container) -> Self
+    @MainActor static func make(container: Container) -> Self
 
 }
 
@@ -35,7 +35,9 @@ extension Global where Wrapped: GloballyAvailable {
     ///
     /// Don't forget the trailing parentheses!
     public init() {
-        wrappedValue = Container.shared.resolveInstance()
+        self.init { container in
+            container.resolveInstance()
+        }
     }
 
 }

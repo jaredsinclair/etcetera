@@ -9,7 +9,7 @@
 import Foundation
 
 /// Resolves and caches global dependencies.
-public class Container {
+@MainActor public class Container {
 
     // MARK: - Public (Static)
 
@@ -149,12 +149,12 @@ public class Container {
     /// not exposed at a public scope. It's only to be used by the `Global`
     /// struct in its "designated" initializers, which are called from
     /// developer-provided convenience initializers in extensions.
-    @usableFromInline internal func resolveInstance<T>(via initializer: (Container) -> T) -> T {
+    @usableFromInline internal func resolveInstance<T>(via initializer: @MainActor (Container) -> T) -> T {
         instanceResolver(for: T.self).resolved(via: initializer, container: self)
     }
 
     /// Same as `resolveInstance(via:)` except it also takes an instance identifier.
-    @usableFromInline internal func resolveInstance<T, InstanceIdentifier: Hashable>(for identifier: InstanceIdentifier, via initializer: (Container) -> T) -> T {
+    @usableFromInline internal func resolveInstance<T, InstanceIdentifier: Hashable>(for identifier: InstanceIdentifier, via initializer: @MainActor (Container) -> T) -> T {
         instanceResolver(for: T.self).resolved(for: identifier, via: initializer, container: self)
     }
 

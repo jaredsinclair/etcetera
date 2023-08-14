@@ -9,7 +9,7 @@
 import XCTest
 import Etcetera
 
-class GlobalTests: XCTestCase {
+@MainActor class GlobalTests: XCTestCase {
 
     func testTheBasics() {
         let object = MyClass()

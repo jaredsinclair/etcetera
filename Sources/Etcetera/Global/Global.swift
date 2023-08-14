@@ -13,7 +13,24 @@
 @propertyWrapper public struct Global<Wrapped> {
 
     /// The wrapped value (required by `@propertyWrapper`).
-    public let wrappedValue: Wrapped
+    @MainActor public var wrappedValue: Wrapped {
+        mutating get {
+            if let existing = _wrappedValue {
+                return existing
+            } else {
+                let new = resolver()
+                _wrappedValue = new
+                return new
+            }
+        }
+    }
+
+    /// A closure that resolves the wrapped dependency using the shared
+    /// dependency container.
+    private let resolver: @MainActor () -> Wrapped
+
+    /// Backing property for `wrappedValue`.
+    private var _wrappedValue: Wrapped?
 
     /// Initializes a Global using a closure that returns a wrapped value. The
     /// closure is only evaluated if an existing cached value cannot be found
@@ -24,8 +41,10 @@
     /// directly when declaring an `@Global`-wrapped property. Instead, Global
     /// wrappers are regularly initialized via init methods declared in
     /// extensions (see the README for details).
-    public init(initializer: (Container) -> Wrapped) {
-        self.wrappedValue = Container.shared.resolveInstance(via: initializer)
+    public init(initializer: @MainActor @escaping (Container) -> Wrapped) {
+        resolver = {
+            Container.shared.resolveInstance(via: initializer)
+        }
     }
 
     /// Initializes a Global using a closure that returns a wrapped value. The
@@ -43,9 +62,11 @@
     /// directly when declaring an `@Global`-wrapped property. Instead, Global
     /// wrappers are regularly initialized via init methods declared in
     /// extensions (see the README for details).
-    public init<InstanceIdentifier: Hashable>(instanceIdentifier: InstanceIdentifier, initializer: (Container) -> Wrapped) {
-        let someKey = AnyInstanceIdentifier<Wrapped, InstanceIdentifier>(instanceIdentifier)
-        self.wrappedValue = Container.shared.resolveInstance(for: someKey, via: initializer)
+    public init<InstanceIdentifier: Hashable>(instanceIdentifier: InstanceIdentifier, initializer: @MainActor @escaping (Container) -> Wrapped) {
+        resolver = {
+            let someKey = AnyInstanceIdentifier<Wrapped, InstanceIdentifier>(instanceIdentifier)
+            return Container.shared.resolveInstance(for: someKey, via: initializer)
+        }
     }
 
 }

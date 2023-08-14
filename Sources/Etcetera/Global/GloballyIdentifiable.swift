@@ -27,7 +27,7 @@ public protocol GloballyIdentifiable {
     /// Since the `InstanceIdentifier` associated type can be anything that
     /// conforms to `Hashable`, you can use a type that contains any information
     /// necessary to initialize a `Self` for that identifier.
-    static func make(container: Container, identifier: InstanceIdentifier) -> Self
+    @MainActor static func make(container: Container, identifier: InstanceIdentifier) -> Self
 
 }
 
@@ -38,7 +38,9 @@ extension Global where Wrapped: GloballyIdentifiable {
     ///
     /// See the documentation in the README for example usage.
     public init(_ identifier: Wrapped.InstanceIdentifier) {
-        wrappedValue = Container.shared.resolveInstance(for: identifier)
+        self.init { container in
+            container.resolveInstance(for: identifier)
+        }
     }
 
 }

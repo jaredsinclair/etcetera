@@ -7,7 +7,7 @@
 //
 
 /// Stores a resolver block and one or more resolved instances of a given type.
-@usableFromInline final class InstanceResolver {
+@MainActor @usableFromInline final class InstanceResolver {
 
     /// A single resolved instance, not keyed by any instance identifier.
     private var resolvedInstance = Protected<Any?>(nil)
@@ -56,7 +56,7 @@
     }
 
     /// Resolves an instance of `T` using `GlobalContainer`.
-    @usableFromInline func resolved<T>(via initializer: (Container) -> T, container: Container) -> T {
+    @usableFromInline func resolved<T>(via initializer: @MainActor (Container) -> T, container: Container) -> T {
         return resolvedInstance.access { instance -> T in
             if let existing = instance as? T {
                 return existing
@@ -69,7 +69,7 @@
     }
 
     /// Resolves an instance of `T` using `GlobalContainer`.
-    @usableFromInline func resolved<T, InstanceIdentifier: Hashable>(for identifier: InstanceIdentifier, via initializer: (Container) -> T, container: Container) -> T {
+    @usableFromInline func resolved<T, InstanceIdentifier: Hashable>(for identifier: InstanceIdentifier, via initializer: @MainActor (Container) -> T, container: Container) -> T {
         let key = AnyHashable(identifier)
         return resolvedInstances.access { dictionary -> T in
             if let existing = dictionary[key] as? T {
