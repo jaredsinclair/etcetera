@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.8
 
 import PackageDescription
 
@@ -11,10 +11,15 @@ let package = Package(
         .library(name: "Etcetera", targets: ["Etcetera"])
     ],
     targets: [
-        .target(name: "Etcetera"),
-        .testTarget(name: "EtceteraTests",
+        .target(
+            name: "Etcetera",
+            swiftSettings: [ .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]) ]
+        ),
+        .testTarget(
+            name: "EtceteraTests",
             dependencies: [
                 "Etcetera"
-            ]),
+            ]
+        ),
     ]
 )

@@ -9,13 +9,13 @@
 import UIKit
 
 /// For environments that do not support background tasks.
-class UnsupportedBackgroundTask {
+final class UnsupportedBackgroundTask: @unchecked Sendable {
 
-    static func start() -> UnsupportedBackgroundTask? {
+    @MainActor static func start() -> UnsupportedBackgroundTask? {
         return nil
     }
 
-    func start(withExpirationHandler handler: (() -> Void)?) -> Bool {
+    @MainActor func start(withExpirationHandler handler: (() -> Void)?) -> Bool {
         return false
     }
 

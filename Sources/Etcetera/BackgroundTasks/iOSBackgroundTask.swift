@@ -11,14 +11,14 @@
 import UIKit
 
 /// A quality-of-life wrapper around requesting iOS background execution time.
-class iOSBackgroundTask {
+class iOSBackgroundTask: @unchecked Sendable {
 
     /// Convenience for initializing a task with a default expiration handler.
     ///
     /// - returns: Returns `nil` if background task time was denied.
-    static func start() -> iOSBackgroundTask? {
+    @MainActor static func start() -> iOSBackgroundTask? {
         let task = iOSBackgroundTask()
-        let successful = task.start(withExpirationHandler: nil)
+        let successful = task.start()
         return (successful) ? task : nil
     }
 
@@ -30,9 +30,9 @@ class iOSBackgroundTask {
     /// suspended when the block returns.
     ///
     /// - returns: Returns `true` if background execution time was allotted.
-    func start(withExpirationHandler handler: (() -> Void)?) -> Bool {
+    @MainActor func start(withExpirationHandler handler: @escaping @Sendable () -> Void = {}) -> Bool {
         self.taskId = UIApplication.shared.beginBackgroundTask {
-            handler?()
+            handler()
             self.end()
         }
         return (self.taskId != .invalid)
@@ -43,7 +43,9 @@ class iOSBackgroundTask {
         guard self.taskId != .invalid else { return }
         let taskId = self.taskId
         self.taskId = .invalid
-        UIApplication.shared.endBackgroundTask(taskId)
+        DispatchQueue.main.async {
+            UIApplication.shared.endBackgroundTask(taskId)
+        }
     }
 
     init() {}

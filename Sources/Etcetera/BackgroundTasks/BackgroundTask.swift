@@ -13,14 +13,14 @@ private typealias Internals = UnsupportedBackgroundTask
 #endif
 
 /// A cross-platform wrapper for requesting background execution time.
-public class BackgroundTask {
+public final class BackgroundTask: @unchecked Sendable {
 
     /// Convenience for initializing a task with a default expiration handler.
     ///
     /// - returns: Returns `nil` if background task time was denied.
-    public static func start() -> BackgroundTask? {
+    @MainActor public static func start() -> BackgroundTask? {
         let task = BackgroundTask()
-        let successful = task.start(withExpirationHandler: nil)
+        let successful = task.start()
         return (successful) ? task : nil
     }
 
@@ -32,7 +32,7 @@ public class BackgroundTask {
     /// suspended when the block returns.
     ///
     /// - returns: Returns `true` if background execution time was allotted.
-    public func start(withExpirationHandler handler: (() -> Void)?) -> Bool {
+    @MainActor public func start(withExpirationHandler handler: @escaping @Sendable () -> Void = {}) -> Bool {
         internals.start(withExpirationHandler: handler)
     }
 

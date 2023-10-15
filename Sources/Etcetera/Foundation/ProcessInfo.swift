@@ -41,7 +41,11 @@ extension ProcessInfo {
 
         /// Supply your own "-com.domain.MyApp." prefix which must be present in
         /// all the custom arguments defined in your target's scheme editor.
-        public static var commonPrefix = ""
+        public static var commonPrefix: String {
+            get { _commonPrefix.current }
+            set { _commonPrefix.current = newValue }
+        }
+        private static let _commonPrefix = Protected<String>("")
 
         /// Required by `RawRepresentable`.
         public typealias RawValue = String
