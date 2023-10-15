@@ -37,7 +37,7 @@ public struct Activity: @unchecked Sendable {
     // MARK: - Typealiases
 
     /// The signature of the closure returned from `enter()`.
-    public typealias Leave = () -> Void
+    public typealias Leave = @Sendable () -> Void
 
     // MARK: - Nested Types
 
@@ -150,11 +150,36 @@ public struct Activity: @unchecked Sendable {
     ///
     /// - returns: Returns a closure that leaves the activity.
     public func enter() -> Leave {
-        var state = os_activity_scope_state_s()
-        os_activity_scope_enter(reference, &state)
+        let scope = ActivityScope(reference)
+        scope.enter()
         return {
-            os_activity_scope_leave(&state)
+            scope.leave()
         }
+    }
+
+}
+
+private final class ActivityScope: @unchecked Sendable {
+
+    private let reference: os_activity_t
+    private let state = UnsafeMutablePointer<os_activity_scope_state_s>.allocate(capacity: 1)
+
+    init(_ reference: os_activity_t) {
+        self.reference = reference
+        state.initialize(to: os_activity_scope_state_s())
+    }
+
+    deinit {
+        state.deinitialize(count: 1)
+        state.deallocate()
+    }
+
+    func enter() {
+        os_activity_scope_enter(reference, state)
+    }
+
+    func leave() {
+        os_activity_scope_leave(state)
     }
 
 }
