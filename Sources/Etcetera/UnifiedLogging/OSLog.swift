@@ -100,23 +100,29 @@ extension OSLog {
     public enum Options {
 
         /// The default Privacy setting to use.
-        public static var defaultPrivacy: Privacy = {
-            #if DEBUG
-            return .visible
-            #else
-            return .redacted
-            #endif
-        }()
+        public static var defaultPrivacy: Privacy {
+            get { _defaultPrivacy.current }
+            set { _defaultPrivacy.current = newValue }
+        }
+
+        /// Backing for `defaultPrivacy`.
+        private static let _defaultPrivacy = Protected<Privacy>(.preferredDefault)
 
         /// If `true`, the function, file, and line number will be included in
         /// messages logged using the "foo(value:)" log methods below.
-        public static var includeSourceLocationInValueLogs: Bool = {
+        public static var includeSourceLocationInValueLogs: Bool {
+            get { _includeSourceLocationInValueLogs.current }
+            set { _includeSourceLocationInValueLogs.current = newValue }
+        }
+
+        /// Backing for `includeSourceLocationInValueLogs`.
+        private static let _includeSourceLocationInValueLogs = Protected<Bool>({
             #if DEBUG
-            return true
+                return true
             #else
-            return false
+                return false
             #endif
-        }()
+        }())
 
     }
 
@@ -493,6 +499,18 @@ private struct AnyLoggable: CustomLogRepresentable {
     init(_ value: Any) {
         loggableValue = value
     }
+}
+
+private extension OSLog.Privacy {
+
+    static var preferredDefault: OSLog.Privacy {
+        #if DEBUG
+            .visible
+        #else
+            .redacted
+        #endif
+    }
+
 }
 
 extension NSError: CustomLogRepresentable { }
