@@ -32,7 +32,7 @@ import os.activity
 ///         // process the image...
 ///         return result
 ///     }
-public struct Activity {
+public struct Activity: @unchecked Sendable {
 
     // MARK: - Typealiases
 
