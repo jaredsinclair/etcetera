@@ -18,13 +18,13 @@ import Foundation
 /// and trust ARC to release the observer at the appropriate time, which will
 /// remove all observations. This assumes, of course, that all blocks passed to
 /// `when(_:perform:)` do not strongly capture `self`.
-public class NotificationObserver: NSObject {
+public class NotificationObserver: NSObject, @unchecked Sendable {
 
     // MARK: - Typealiases
 
     /// Signature for the block which callers can use to remove an existing
     /// observer during the NotificationObserver's lifetime.
-    public typealias Unobserver = () -> Void
+    public typealias Unobserver = @Sendable () -> Void
 
     // MARK: - Private Properties
 
@@ -39,7 +39,13 @@ public class NotificationObserver: NSObject {
     private weak var object: AnyObject?
 
     /// A tote bag of observation tokens.
-    private var tokens = [NSObjectProtocol]()
+    private let tokens = Protected<[Token]>([])
+
+    // MARK: - Sigh, Concurrency
+
+    private struct Token: @unchecked Sendable {
+        let wrapped: NSObjectProtocol
+    }
 
     // MARK: - Init/Deinit
 
@@ -55,7 +61,9 @@ public class NotificationObserver: NSObject {
     }
 
     deinit {
-        tokens.forEach(NotificationCenter.default.removeObserver)
+        tokens.current.forEach {
+            NotificationCenter.default.removeObserver($0)
+        }
     }
 
     // MARK: - Public Methods
@@ -80,20 +88,22 @@ public class NotificationObserver: NSObject {
     /// - returns: Returns a block which can be used to remove the observation
     /// later on, if desired. This is not necessary for general use, however.
     @discardableResult
-    public func when(_ name: Notification.Name, perform block: @escaping (Notification) -> Void) -> Unobserver {
+    public func when(_ name: Notification.Name, perform block: @escaping @Sendable (Notification) -> Void) -> Unobserver {
         guard wasInitializedWithTargetObject == false || object != nil else { return {} }
-        let token = NotificationCenter.default.addObserver(
+        let token = Token(wrapped: NotificationCenter.default.addObserver(
             forName: name,
             object: object,
             queue: queue,
             using: block
-        )
+        ))
         let unobserve: Unobserver = {
             NotificationCenter.default.removeObserver(token)
         }
         queue.asap { [weak self] in
             if let this = self {
-                this.tokens.append(token)
+                this.tokens.access {
+                    $0.append(token)
+                }
             } else {
                 unobserve()
             }
@@ -104,8 +114,8 @@ public class NotificationObserver: NSObject {
     /// An alternative to the above method which does not pass a reference to
     /// the notification in the block argument, which can spare you a `_ in`.
     @discardableResult
-    public func when(_ name: Notification.Name, perform block: @escaping () -> Void) -> Unobserver {
-        return when(name, perform: {_ in block()})
+    public func when(_ name: Notification.Name, perform block: @escaping @Sendable () -> Void) -> Unobserver {
+        return when(name, perform: { _ in block() })
     }
 
 }

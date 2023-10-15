@@ -11,7 +11,7 @@ import Foundation
 extension DispatchQueue {
 
     /// Because c'mon, really, how often do I ever need anything but this?
-    public func after(_ seconds: TimeInterval, execute block: @escaping () -> Void) {
+    public func after(_ seconds: TimeInterval, execute block: @escaping @Sendable () -> Void) {
         asyncAfter(deadline: .now() + seconds, execute: block)
     }
 

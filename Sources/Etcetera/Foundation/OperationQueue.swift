@@ -20,7 +20,7 @@ extension OperationQueue {
     /// execution on the current queue, if it isn't the main queue itself.
     ///
     /// - parameter block: The block to be performed.
-    public static func onMain(_ block: @escaping () -> Void) {
+    public static func onMain(_ block: @escaping @Sendable () -> Void) {
         OperationQueue.main.asap(block)
     }
 
@@ -41,7 +41,7 @@ extension OperationQueue {
     /// execution on the current queue, if it isn't the receiver itself.
     ///
     /// - parameter block: The block to be performed.
-    public func asap(_ block: @escaping () -> Void) {
+    public func asap(_ block: @escaping @Sendable () -> Void) {
         if OperationQueue.current === self {
             block()
         } else {
@@ -59,7 +59,7 @@ extension OperationQueue {
         addOperations(operations, waitUntilFinished: false)
     }
 
-    public func sync(_ block: @escaping () -> Void) {
+    public func sync(_ block: @escaping @Sendable () -> Void) {
         let operation = BlockOperation(block: block)
         addOperations([operation], waitUntilFinished: true)
     }
