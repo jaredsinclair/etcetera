@@ -11,7 +11,7 @@ import os.lock
 /// A high-performance lock supported by all Apple platforms.
 ///
 /// This lock is **not** recursive.
-public final class Lock {
+public final class Lock: Sendable {
 
     /// See WWDC 2016 Session 720. Using C struct locks like `pthread_mutex_t`
     /// or `os_unfair_lock` directly from Swift code is discouraged because of
@@ -38,7 +38,7 @@ public final class Lock {
 }
 
 /// A generic wrapper around a given value, which is protected by a `Lock`.
-public final class Protected<T> {
+public final class Protected<T>: @unchecked Sendable {
 
     /// Read/write access to the value as if you had used `access(_:)`.
     public var current: T {
