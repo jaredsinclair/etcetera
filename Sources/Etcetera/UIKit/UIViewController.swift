@@ -8,8 +8,20 @@
 // swiftlint:disable force_cast
 
 import UIKit
+import SwiftUI
 
 extension UIViewController {
+
+    public func addHostedChild<Root: View>(for root: Root) {
+        let host = UIHostingController(rootView: root)
+        addConstrainedChild(host)
+    }
+
+    public func addConstrainedChild(_ child: UIViewController) {
+        addChild(child)
+        view.addConstrainedSubview(child.view)
+        child.didMove(toParent: self)
+    }
 
     public static func instantiateFromStoryboard<T: UIViewController>(of type: T.Type = T.self) -> T {
         let identifier = String(describing: type)
