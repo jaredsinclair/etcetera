@@ -12,8 +12,10 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Etcetera",
-            swiftSettings: [ .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]) ]
+            name: "Etcetera"
+            // Uncomment to enable complete strict concurrency checking. In a
+            // future update, it would be handy if this were scriptable in CI:
+            // swiftSettings: [ .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]) ]
         ),
         .testTarget(
             name: "EtceteraTests",
