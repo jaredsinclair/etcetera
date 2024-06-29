@@ -11,7 +11,7 @@
 import UIKit
 
 /// A quality-of-life wrapper around requesting iOS background execution time.
-class iOSBackgroundTask: @unchecked Sendable {
+final class iOSBackgroundTask: Sendable {
 
     /// Convenience for initializing a task with a default expiration handler.
     ///
@@ -50,7 +50,12 @@ class iOSBackgroundTask: @unchecked Sendable {
 
     init() {}
 
-    private var taskId: UIBackgroundTaskIdentifier = .invalid
+    private var taskId: UIBackgroundTaskIdentifier {
+        get { _taskId.current }
+        set { _taskId.current = newValue }
+    }
+
+    private let _taskId = Protected(UIBackgroundTaskIdentifier.invalid)
 
 }
 

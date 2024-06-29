@@ -18,7 +18,7 @@ import Foundation
 /// and trust ARC to release the observer at the appropriate time, which will
 /// remove all observations. This assumes, of course, that all blocks passed to
 /// `when(_:perform:)` do not strongly capture `self`.
-public class NotificationObserver: NSObject, @unchecked Sendable {
+public final class NotificationObserver: NSObject, Sendable {
 
     // MARK: - Typealiases
 
@@ -35,8 +35,18 @@ public class NotificationObserver: NSObject, @unchecked Sendable {
     /// The target queue for all observation callbacks.
     private let queue: OperationQueue
 
-    /// The (optional) target object to be used when observing notifications.
-    private weak var object: AnyObject?
+    /// The target object to be used when observing notifications.
+    private var object: AnyObject? {
+        get { _object.access {
+            $0.object
+        }}
+        set { _object.access {
+            $0.object = newValue
+        }}
+    }
+
+    /// The backing storage for `object`.
+    private let _object: Protected<WeakReferencingBox>
 
     /// A tote bag of observation tokens.
     private let tokens = Protected<[Token]>([])
@@ -55,7 +65,7 @@ public class NotificationObserver: NSObject, @unchecked Sendable {
     ///
     /// - parameter queue: The target queue for all observation callbacks.
     public init(object: AnyObject? = nil, queue: OperationQueue = .main) {
-        self.object = object
+        self._object = Protected(WeakReferencingBox(object: object))
         self.wasInitializedWithTargetObject = (object != nil)
         self.queue = queue
     }
@@ -116,6 +126,16 @@ public class NotificationObserver: NSObject, @unchecked Sendable {
     @discardableResult
     public func when(_ name: Notification.Name, perform block: @escaping @Sendable () -> Void) -> Unobserver {
         return when(name, perform: { _ in block() })
+    }
+
+    // MARK: - Nested Types
+
+    private final class WeakReferencingBox {
+        weak var object: AnyObject?
+
+        init(object: AnyObject? = nil) {
+            self.object = object
+        }
     }
 
 }

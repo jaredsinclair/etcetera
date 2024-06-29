@@ -42,7 +42,7 @@ public struct Activity: @unchecked Sendable {
     // MARK: - Nested Types
 
     /// Swift-native type that corresponds to OS_ACTIVITY_FLAGs.
-    public struct Options: OptionSet {
+    public struct Options: OptionSet, Sendable {
         public let rawValue: UInt32
 
         public init(rawValue: UInt32) {

@@ -14,7 +14,7 @@ extension Notification.Name {
 }
 
 /// A class that reports whether or not the network is currently reachable.
-public class Reachability: NSObject {
+public final class Reachability: NSObject, Sendable {
 
     /// A more accurate alternative to using a Bool
     public enum Status {
@@ -40,33 +40,29 @@ public class Reachability: NSObject {
         return .probablyNotButWhoKnows
     }
 
-    private let reachability: SCNetworkReachability?
-    private var lock = os_unfair_lock()
-    private var _flags: SCNetworkReachabilityFlags?
+    private let reachability: Protected<SCNetworkReachability?>
+    private let _flags = Protected<SCNetworkReachabilityFlags?>()
+
     private var flags: SCNetworkReachabilityFlags? {
         get {
-            os_unfair_lock_lock(&lock)
-            let value = _flags
-            os_unfair_lock_unlock(&lock)
-            return value
+            _flags.current
         }
         set {
-            os_unfair_lock_lock(&lock)
-            _flags = newValue
-            os_unfair_lock_unlock(&lock)
+            _flags.current = newValue
             NotificationCenter.default.post(name: .ReachabilityChanged, object: nil)
         }
     }
 
     public init(host: String = "www.google.com") {
-        self.reachability = SCNetworkReachabilityCreateWithName(nil, host)
+        let optionalReachability = SCNetworkReachabilityCreateWithName(nil, host)
+        self.reachability = Protected(optionalReachability)
         super.init()
-        guard let reachability = reachability else { return }
+        guard let reachability = optionalReachability else { return }
 
         // Populate the current flags asap.
         var flags = SCNetworkReachabilityFlags()
         SCNetworkReachabilityGetFlags(reachability, &flags)
-        _flags = flags
+        self.flags = flags
 
         // Then configure the callback.
         let callback: SCNetworkReachabilityCallBack = { (_, flags, infoPtr) in

@@ -11,7 +11,7 @@ import os.lock
 /// A high-performance lock supported by all Apple platforms.
 ///
 /// This lock is **not** recursive.
-public final class Lock: Sendable {
+public final class Lock: @unchecked Sendable {
 
     /// See WWDC 2016 Session 720. Using C struct locks like `pthread_mutex_t`
     /// or `os_unfair_lock` directly from Swift code is discouraged because of
@@ -64,9 +64,18 @@ public final class Protected<T>: @unchecked Sendable {
     }
 }
 
+extension Protected {
+
+    /// Convenience initializer that defaults to `nil`.
+    public convenience init<O>() where T == Optional<O> {
+        self.init(nil)
+    }
+
+}
+
 /// A dictionary-like object that provides synchronized read/writes via an
 /// underlying `Protected` value.
-public final class ProtectedDictionary<Key: Hashable, Value> {
+public final class ProtectedDictionary<Key: Hashable, Value>: Sendable {
 
     private let protected: Protected<[Key: Value]>
 

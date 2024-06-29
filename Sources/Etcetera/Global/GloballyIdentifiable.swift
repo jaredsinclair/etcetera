@@ -18,7 +18,7 @@
 public protocol GloballyIdentifiable {
 
     /// The type to be used for per-instance identifiers.
-    associatedtype InstanceIdentifier: Hashable
+    associatedtype InstanceIdentifier: Hashable & Sendable
 
     /// Produces an instance of `Self` on demand. This method is called from the
     /// shared dependency container when a cached instance of `Self` cannot be

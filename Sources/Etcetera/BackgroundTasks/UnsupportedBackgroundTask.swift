@@ -9,7 +9,7 @@
 import UIKit
 
 /// For environments that do not support background tasks.
-final class UnsupportedBackgroundTask: @unchecked Sendable {
+final class UnsupportedBackgroundTask: Sendable {
 
     @MainActor static func start() -> UnsupportedBackgroundTask? {
         return nil

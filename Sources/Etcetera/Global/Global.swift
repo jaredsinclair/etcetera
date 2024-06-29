@@ -41,7 +41,7 @@
     /// directly when declaring an `@Global`-wrapped property. Instead, Global
     /// wrappers are regularly initialized via init methods declared in
     /// extensions (see the README for details).
-    public init(initializer: @MainActor @escaping (Container) -> Wrapped) {
+    public init(initializer: @MainActor @escaping @Sendable (Container) -> Wrapped) {
         resolver = {
             Container.shared.resolveInstance(via: initializer)
         }
@@ -62,7 +62,7 @@
     /// directly when declaring an `@Global`-wrapped property. Instead, Global
     /// wrappers are regularly initialized via init methods declared in
     /// extensions (see the README for details).
-    public init<InstanceIdentifier: Hashable>(instanceIdentifier: InstanceIdentifier, initializer: @MainActor @escaping (Container) -> Wrapped) {
+    public init<InstanceIdentifier: Hashable & Sendable>(instanceIdentifier: InstanceIdentifier, initializer: @MainActor @escaping @Sendable (Container) -> Wrapped) {
         resolver = {
             let someKey = AnyInstanceIdentifier<Wrapped, InstanceIdentifier>(instanceIdentifier)
             return Container.shared.resolveInstance(for: someKey, via: initializer)
