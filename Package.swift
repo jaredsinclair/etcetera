@@ -13,7 +13,13 @@ let package = Package(
     targets: [
         .target(
             name: "Etcetera",
-            swiftSettings: [ .enableExperimentalFeature("StrictConcurrency") ]
+            swiftSettings: [
+                // Uncomment the following in local checkouts to enable strict
+                // concurrency on demand. When Swift 6 supports lands in Fall
+                // 2024, we will be able to remove the use of experimental
+                // features altogether and specify the language mode instead.
+                // .enableExperimentalFeature("StrictConcurrency")
+            ]
         ),
         .testTarget(
             name: "EtceteraTests",
