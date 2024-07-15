@@ -12,14 +12,10 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Etcetera",
-            swiftSettings: [
-                // Uncomment the following in local checkouts to enable strict
-                // concurrency on demand. When Swift 6 supports lands in Fall
-                // 2024, we will be able to remove the use of experimental
-                // features altogether and specify the language mode instead.
-                // .enableExperimentalFeature("StrictConcurrency")
-            ]
+            name: "Etcetera"
+            // Uncomment to enable complete strict concurrency checking. In a
+            // future update, it would be handy if this were scriptable in CI:
+            // swiftSettings: [ .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]) ]
         ),
         .testTarget(
             name: "EtceteraTests",
