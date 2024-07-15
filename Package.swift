@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:5.10
 
 import PackageDescription
 
@@ -13,7 +13,7 @@ let package = Package(
     targets: [
         .target(
             name: "Etcetera",
-            swiftSettings: [ .swiftLanguageVersion(.v6) ]
+            swiftSettings: [ .enableExperimentalFeature("StrictConcurrency") ]
         ),
         .testTarget(
             name: "EtceteraTests",
