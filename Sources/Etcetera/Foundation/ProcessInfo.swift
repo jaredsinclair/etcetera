@@ -37,14 +37,16 @@ extension ProcessInfo {
     /// or:
     ///
     ///     if ProcessInfo.Argument.resetCachesOnLaunch.isEnabled { ... }
-    public struct Argument: RawRepresentable, ExpressibleByStringLiteral {
+    public struct Argument: RawRepresentable, ExpressibleByStringLiteral, Sendable {
 
         /// Supply your own "-com.domain.MyApp." prefix which must be present in
         /// all the custom arguments defined in your target's scheme editor.
-        public static var commonPrefix: String {
+        public static nonisolated var commonPrefix: String {
             get { _commonPrefix.current }
             set { _commonPrefix.current = newValue }
         }
+
+        /// Backing storage for `commonPrefix`.
         private static let _commonPrefix = Protected<String>("")
 
         /// Required by `RawRepresentable`.
@@ -62,23 +64,26 @@ extension ProcessInfo {
             return ProcessInfo.isArgumentEnabled(self)
         }
 
+        /// Required by `RawRepresentable`.
         public init(rawValue: String) {
             self.rawValue = rawValue
         }
 
+        /// Required by `RawRepresentable`.
         public init(stringLiteral value: String) {
             self.rawValue = value
         }
+
     }
 
     /// - returns: Returns `true` if `argument` is found among the arguments.
-    public static func isArgumentEnabled(_ argument: Argument) -> Bool {
+    public static nonisolated func isArgumentEnabled(_ argument: Argument) -> Bool {
         let string = Argument.commonPrefix + argument.rawValue
         return processInfo.arguments.contains(string)
     }
 
     /// Returns `true` if the app is running as a test runner for unit tests.
-    public static var isRunningInUnitTests: Bool {
+    public static nonisolated var isRunningInUnitTests: Bool {
         processInfo.environment["XCTestConfigurationFilePath"] != nil
     }
 

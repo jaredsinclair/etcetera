@@ -13,7 +13,7 @@ private typealias Internals = UnsupportedBackgroundTask
 #endif
 
 /// A cross-platform wrapper for requesting background execution time.
-public final class BackgroundTask: @unchecked Sendable {
+public final class BackgroundTask: Sendable {
 
     /// Convenience for initializing a task with a default expiration handler.
     ///
