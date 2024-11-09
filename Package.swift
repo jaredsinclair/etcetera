@@ -13,7 +13,7 @@ let package = Package(
     targets: [
         .target(
             name: "Etcetera",
-            swiftSettings: [ .swiftLanguageVersion(.v6) ]
+            swiftSettings: [ .swiftLanguageMode(.v6) ]
         ),
         .testTarget(
             name: "EtceteraTests",
